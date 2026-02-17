@@ -266,3 +266,107 @@ Deno.test({
   sanitizeResources: false,
   sanitizeOps: false,
 });
+
+Deno.test({
+  name: "Users - where by id",
+  async fn() {
+    const { path } = setupTestDb();
+
+    const created = Users.create({
+      username: "whereid",
+      password: await hash("pass"),
+      root: "/whereid",
+      uid: 1000,
+      gid: 1000,
+    });
+
+    const results = Users.where("id", created.id).get();
+
+    assertEquals(results.length, 1);
+    assertEquals(results[0].id, created.id);
+
+    await cleanupTestDb(path);
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+Deno.test({
+  name: "Users - where with unknown field returns empty",
+  async fn() {
+    const { path } = setupTestDb();
+
+    Users.create({
+      username: "unknown",
+      password: await hash("pass"),
+      root: "/unknown",
+      uid: 1000,
+      gid: 1000,
+    });
+
+    // Using a field other than "username" or "id"
+    const results = Users.where("root" as keyof typeof Users.prototype, "/unknown").get();
+
+    assertEquals(results, []);
+
+    await cleanupTestDb(path);
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+Deno.test({
+  name: "Users - update with empty data returns existing user",
+  async fn() {
+    const { path } = setupTestDb();
+
+    const created = Users.create({
+      username: "emptyupdate",
+      password: await hash("pass"),
+      root: "/emptyupdate",
+      uid: 1000,
+      gid: 1000,
+    });
+
+    // Update with no fields
+    const updated = Users.update(created.id, {});
+
+    assertEquals(updated?.username, "emptyupdate");
+
+    await cleanupTestDb(path);
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+Deno.test({
+  name: "Users - update individual fields",
+  async fn() {
+    const { path } = setupTestDb();
+
+    const created = Users.create({
+      username: "individual",
+      password: await hash("pass"),
+      root: "/individual",
+      uid: 1000,
+      gid: 1000,
+    });
+
+    // Update username only
+    Users.update(created.id, { username: "newname" });
+    
+    // Update password only
+    const newPass = await hash("newpass");
+    Users.update(created.id, { password: newPass });
+    
+    // Update gid only
+    const updated = Users.update(created.id, { gid: 2000 });
+
+    assertEquals(updated?.username, "newname");
+    assertEquals(updated?.gid, 2000);
+
+    await cleanupTestDb(path);
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});

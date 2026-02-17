@@ -162,3 +162,38 @@ Deno.test("compact - preserves objects and arrays", () => {
   assertEquals(result[0], obj);
   assertEquals(result[1], arr);
 });
+
+// ============================================================================
+// Edge case tests for toFinite/toInteger coverage  
+// ============================================================================
+
+Deno.test("chunk - handles Infinity size", () => {
+  // toFinite converts Infinity to MAX_INTEGER, toInteger keeps it
+  const result = chunk([1, 2, 3], Infinity);
+  assertEquals(result, [[1, 2, 3]]);
+});
+
+Deno.test("chunk - handles -Infinity size (becomes 0)", () => {
+  // toFinite converts -Infinity to -MAX_INTEGER, toInteger keeps it
+  // Math.max with 0 makes it 0
+  const result = chunk([1, 2, 3], -Infinity);
+  assertEquals(result, []);
+});
+
+Deno.test("chunk - handles NaN size (becomes 0)", () => {
+  // NaN becomes 0 in toFinite (value !== value check)
+  const result = chunk([1, 2, 3], NaN);
+  assertEquals(result, []);
+});
+
+Deno.test("chunk - handles null array", () => {
+  // deno-lint-ignore no-explicit-any
+  const result = chunk(null as any, 2);
+  assertEquals(result, []);
+});
+
+Deno.test("chunk - handles undefined array", () => {
+  // deno-lint-ignore no-explicit-any
+  const result = chunk(undefined as any, 2);
+  assertEquals(result, []);
+});
