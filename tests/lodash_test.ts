@@ -247,3 +247,36 @@ Deno.test("padStart - array as chars (triggers baseToString with array)", () => 
   // Array ["a", "b"] becomes "a,b" via baseToString
   assertEquals(result.includes("a"), true);
 });
+
+// ============================================================================
+// Symbol and special value tests for baseToString coverage
+// ============================================================================
+
+Deno.test("padStart - symbol as chars (triggers isSymbol branch)", () => {
+  // Covers: if (isSymbol(value)) in baseToString
+  // deno-lint-ignore no-explicit-any
+  const sym = Symbol("test") as any;
+  const result = String(padStart("x", 5, sym));
+  assertEquals(result.endsWith("x"), true);
+});
+
+Deno.test("padStart - undefined chars (triggers getTag undefined branch)", () => {
+  // Covers: value === undefined ? "[object Undefined]" in getTag
+  // When chars is undefined, it defaults to space " "
+  const result = padStart("a", 3, undefined);
+  assertEquals(result, "  a");
+});
+
+Deno.test("padStart - null chars (triggers getTag null branch)", () => {
+  // Covers: "[object Null]" branch in getTag
+  // deno-lint-ignore no-explicit-any
+  const result = String(padStart("a", 5, null as any));
+  assertEquals(result.endsWith("a"), true);
+});
+
+Deno.test("chunk - handles -0 value size (covers -0 branch)", () => {
+  // Covers: (result == "0" && (1 / value) == -INFINITY) ? "-0" : result
+  // -0 is treated as 0 in Math.max, so result is empty
+  const result = chunk([1, 2, 3], -0);
+  assertEquals(result, []);
+});

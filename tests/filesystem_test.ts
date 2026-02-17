@@ -1080,3 +1080,225 @@ Deno.test("FileSystem - utime modifies file mtime", async () => {
   
   await Deno.remove(tempDir, { recursive: true });
 });
+
+// ============================================================================
+// FileSystem edge cases for uncovered branches
+// ============================================================================
+
+Deno.test("FileSystem - constructor uses Deno.cwd when root is empty", () => {
+  const mockConn = createMockFsConnection();
+  // Pass empty string for root to trigger `root || Deno.cwd()`
+  const fs = new FileSystem(mockConn as unknown as import("../src/server/connection.ts").default, { root: "", uid: 1000, gid: 1000 });
+  
+  assertEquals(fs.root, Deno.cwd());
+});
+
+Deno.test("FileSystem - stat with custom function formatter", async () => {
+  const tempDir = await Deno.makeTempDir();
+  const mockConn = createMockFsConnection();
+  const fs = new FileSystem(mockConn as unknown as import("../src/server/connection.ts").default, { root: tempDir, uid: 0, gid: 0 });
+  
+  await Deno.writeTextFile(`${tempDir}/test.txt`, "content");
+  const fileInfo = await fs.get("test.txt");
+  
+  // Custom formatter function
+  const result = fs.stat(fileInfo, (stat) => `custom:${stat.name}`);
+  assertEquals(result, "custom:test.txt");
+  
+  await Deno.remove(tempDir, { recursive: true });
+});
+
+Deno.test("FileSystem - stat with function returning empty triggers fallback", async () => {
+  const tempDir = await Deno.makeTempDir();
+  const mockConn = createMockFsConnection();
+  const fs = new FileSystem(mockConn as unknown as import("../src/server/connection.ts").default, { root: tempDir, uid: 0, gid: 0 });
+  
+  await Deno.writeTextFile(`${tempDir}/test.txt`, "content");
+  const fileInfo = await fs.get("test.txt");
+  
+  // Function returning empty string - should return undefined/falsy
+  const result = fs.stat(fileInfo, () => "");
+  assertEquals(result, undefined);
+  
+  await Deno.remove(tempDir, { recursive: true });
+});
+
+Deno.test("FileSystem - stat with invalid format type returns empty", async () => {
+  const tempDir = await Deno.makeTempDir();
+  const mockConn = createMockFsConnection();
+  const fs = new FileSystem(mockConn as unknown as import("../src/server/connection.ts").default, { root: tempDir, uid: 0, gid: 0 });
+  
+  await Deno.writeTextFile(`${tempDir}/test.txt`, "content");
+  const fileInfo = await fs.get("test.txt");
+  
+  // Pass a number (neither string nor function) - triggers else return ""
+  // deno-lint-ignore no-explicit-any
+  const result = fs.stat(fileInfo, 123 as any);
+  assertEquals(result, "");
+  
+  await Deno.remove(tempDir, { recursive: true });
+});
+
+Deno.test("FileSystem - stat with unknown string format throws", async () => {
+  const tempDir = await Deno.makeTempDir();
+  const mockConn = createMockFsConnection();
+  const fs = new FileSystem(mockConn as unknown as import("../src/server/connection.ts").default, { root: tempDir, uid: 0, gid: 0 });
+  
+  await Deno.writeTextFile(`${tempDir}/test.txt`, "content");
+  const fileInfo = await fs.get("test.txt");
+  
+  // Unknown format string should throw
+  try {
+    fs.stat(fileInfo, "unknown_format");
+    throw new Error("Should have thrown");
+  } catch (e) {
+    assertEquals((e as Error).message, "Bad file stat formatter");
+  }
+  
+  await Deno.remove(tempDir, { recursive: true });
+});
+
+Deno.test("FileSystem - stat with throwing function rethrows", async () => {
+  const tempDir = await Deno.makeTempDir();
+  const mockConn = createMockFsConnection();
+  const fs = new FileSystem(mockConn as unknown as import("../src/server/connection.ts").default, { root: tempDir, uid: 0, gid: 0 });
+  
+  await Deno.writeTextFile(`${tempDir}/test.txt`, "content");
+  const fileInfo = await fs.get("test.txt");
+  
+  // Function that throws
+  try {
+    fs.stat(fileInfo, () => { throw new Error("Custom error"); });
+    throw new Error("Should have thrown");
+  } catch (e) {
+    assertEquals((e as Error).message, "Custom error");
+  }
+  
+  await Deno.remove(tempDir, { recursive: true });
+});
+
+Deno.test("FileSystem - access returns true for root user (uid=0)", async () => {
+  const tempDir = await Deno.makeTempDir();
+  const mockConn = createMockFsConnection();
+  // uid=0 means root, should always have access
+  const fs = new FileSystem(mockConn as unknown as import("../src/server/connection.ts").default, { root: tempDir, uid: 0, gid: 1000 });
+  
+  await Deno.writeTextFile(`${tempDir}/test.txt`, "content");
+  const result = await fs.access(`${tempDir}/test.txt`);
+  assertEquals(result, true);
+  
+  await Deno.remove(tempDir, { recursive: true });
+});
+
+Deno.test("FileSystem - access returns true for root group (gid=0)", async () => {
+  const tempDir = await Deno.makeTempDir();
+  const mockConn = createMockFsConnection();
+  // gid=0 means root group, should always have access
+  const fs = new FileSystem(mockConn as unknown as import("../src/server/connection.ts").default, { root: tempDir, uid: 1000, gid: 0 });
+  
+  await Deno.writeTextFile(`${tempDir}/test.txt`, "content");
+  const result = await fs.access(`${tempDir}/test.txt`);
+  assertEquals(result, true);
+  
+  await Deno.remove(tempDir, { recursive: true });
+});
+
+Deno.test("FileSystem - access returns false for non-existent file", async () => {
+  const tempDir = await Deno.makeTempDir();
+  const mockConn = createMockFsConnection();
+  const fs = new FileSystem(mockConn as unknown as import("../src/server/connection.ts").default, { root: tempDir, uid: 1000, gid: 1000 });
+  
+  const result = await fs.access(`${tempDir}/nonexistent.txt`);
+  assertEquals(result, false);
+  
+  await Deno.remove(tempDir, { recursive: true });
+});
+
+Deno.test("FileSystem - own uses uid from instance when set", async () => {
+  const tempDir = await Deno.makeTempDir();
+  const mockConn = createMockFsConnection();
+  const fs = new FileSystem(mockConn as unknown as import("../src/server/connection.ts").default, { root: tempDir, uid: 1234, gid: 5678 });
+  
+  const { uid, gid } = await fs.own();
+  assertEquals(uid, 1234);
+  assertEquals(gid, 5678);
+  
+  await Deno.remove(tempDir, { recursive: true });
+});
+
+Deno.test("FileSystem - get throws NotFound for missing file", async () => {
+  const tempDir = await Deno.makeTempDir();
+  const mockConn = createMockFsConnection();
+  const fs = new FileSystem(mockConn as unknown as import("../src/server/connection.ts").default, { root: tempDir, uid: 0, gid: 0 });
+  
+  await assertRejects(
+    async () => await fs.get("nonexistent.txt"),
+    Deno.errors.NotFound,
+  );
+  
+  await Deno.remove(tempDir, { recursive: true });
+});
+
+Deno.test({
+  name: "FileSystem - write creates new file with chown",
+  ignore: Deno.build.os === "windows", // chown not supported on Windows
+  async fn() {
+    const tempDir = await Deno.makeTempDir();
+    const mockConn = createMockFsConnection();
+    const fs = new FileSystem(mockConn as unknown as import("../src/server/connection.ts").default, { root: tempDir, uid: 0, gid: 0 });
+    
+    await fs.write("newfile.txt", new TextEncoder().encode("content"));
+    
+    const content = await Deno.readTextFile(`${tempDir}/newfile.txt`);
+    assertEquals(content, "content");
+    
+    await Deno.remove(tempDir, { recursive: true });
+  },
+});
+
+Deno.test({
+  name: "FileSystem - write appends to existing file",
+  ignore: Deno.build.os === "windows", // chown not supported on Windows
+  async fn() {
+    const tempDir = await Deno.makeTempDir();
+    const mockConn = createMockFsConnection();
+    const fs = new FileSystem(mockConn as unknown as import("../src/server/connection.ts").default, { root: tempDir, uid: 0, gid: 0 });
+    
+    await Deno.writeTextFile(`${tempDir}/append.txt`, "hello");
+    await fs.write("append.txt", new TextEncoder().encode(" world"), { append: true });
+    
+    const content = await Deno.readTextFile(`${tempDir}/append.txt`);
+    assertEquals(content, "hello world");
+    
+    await Deno.remove(tempDir, { recursive: true });
+  },
+});
+
+Deno.test("FileSystem - read returns StreamFile", async () => {
+  const tempDir = await Deno.makeTempDir();
+  const mockConn = createMockFsConnection();
+  const fs = new FileSystem(mockConn as unknown as import("../src/server/connection.ts").default, { root: tempDir, uid: 0, gid: 0 });
+  
+  await Deno.writeTextFile(`${tempDir}/readable.txt`, "content");
+  
+  const result = await fs.read("readable.txt");
+  assertExists(result.stream);
+  assertExists(result.clientPath);
+  
+  result.stream.close();
+  await Deno.remove(tempDir, { recursive: true });
+});
+
+Deno.test("FileSystem - list returns files in directory", async () => {
+  const tempDir = await Deno.makeTempDir();
+  const mockConn = createMockFsConnection();
+  const fs = new FileSystem(mockConn as unknown as import("../src/server/connection.ts").default, { root: tempDir, uid: 0, gid: 0 });
+  
+  await Deno.writeTextFile(`${tempDir}/file1.txt`, "a");
+  await Deno.writeTextFile(`${tempDir}/file2.txt`, "b");
+  
+  const files = await fs.list();
+  assertEquals(files.length, 2);
+  
+  await Deno.remove(tempDir, { recursive: true });
+});
