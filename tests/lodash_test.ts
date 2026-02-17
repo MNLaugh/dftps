@@ -96,3 +96,69 @@ Deno.test("padStart - handles empty string", () => {
   const result = padStart("", 3, "x");
   assertEquals(result, "xxx");
 });
+
+// ============================================================================
+// Additional chunk() tests for better coverage
+// ============================================================================
+
+Deno.test("chunk - handles negative size (treats as 0)", () => {
+  const result = chunk([1, 2, 3], -1);
+  assertEquals(result, []);
+});
+
+Deno.test("chunk - handles zero size", () => {
+  const result = chunk([1, 2, 3], 0);
+  assertEquals(result, []);
+});
+
+Deno.test("chunk - handles fractional size (rounds to integer)", () => {
+  const result = chunk([1, 2, 3, 4, 5, 6], 2.7);
+  assertEquals(result, [[1, 2], [3, 4], [5, 6]]);
+});
+
+// ============================================================================
+// Additional padStart() tests for Unicode
+// ============================================================================
+
+Deno.test("padStart - handles Unicode padding characters", () => {
+  const result = String(padStart("a", 3, "🎉"));
+  assertEquals(result.length >= 3, true);
+});
+
+Deno.test("padStart - handles Unicode in string", () => {
+  const result = String(padStart("🎉", 5, " "));
+  assertEquals(result.includes("🎉"), true);
+});
+
+Deno.test("padStart - numeric input", () => {
+  // When passing a number, padStart converts it internally
+  // The actual behavior may vary based on string conversion
+  const result = String(padStart(42, 5, "0"));
+  assertEquals(result.includes("42"), true);
+  assertEquals(result.endsWith("42"), true);
+});
+
+Deno.test("padStart - padding with multiple chars", () => {
+  const result = String(padStart("x", 5, "ab"));
+  assertEquals(result.endsWith("x"), true);
+  assertEquals(result.length, 5);
+});
+
+// ============================================================================
+// Additional compact() tests
+// ============================================================================
+
+Deno.test("compact - handles null input", () => {
+  // deno-lint-ignore no-explicit-any
+  const result = compact(null as any);
+  assertEquals(result, []);
+});
+
+Deno.test("compact - preserves objects and arrays", () => {
+  const obj = { a: 1 };
+  const arr = [1, 2];
+  const result = compact([obj, arr, 0, null]);
+  assertEquals(result.length, 2);
+  assertEquals(result[0], obj);
+  assertEquals(result[1], arr);
+});

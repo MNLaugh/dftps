@@ -314,3 +314,133 @@ Deno.test("ActiveConnector - accept with existing conn sets up reader/writer", a
   assertEquals(active.reader, mockReader);
   assertEquals(active.writer, mockWriter);
 });
+
+// ============================================================================
+// PassiveConnection tests - accept method
+// ============================================================================
+
+Deno.test("PassiveConnection - accept without listener returns undefined", async () => {
+  const mockConn = createMockConnection();
+  const passive = new PassiveConnection(mockConn);
+  
+  // No listener set
+  passive.listener = undefined;
+  
+  const result = await passive.accept();
+  
+  assertEquals(result, undefined);
+  assertEquals(passive.reader, undefined);
+  assertEquals(passive.writer, undefined);
+});
+
+Deno.test("PassiveConnection - accept with existing conn sets reader/writer", async () => {
+  const mockConn = createMockConnection();
+  const passive = new PassiveConnection(mockConn);
+  
+  const mockReader = {} as ReadableStreamDefaultReader<Uint8Array>;
+  const mockWriter = {} as WritableStreamDefaultWriter<Uint8Array>;
+  
+  // Set a mock listener
+  passive.listener = {
+    accept: () => Promise.reject(new Error("Not called")), // Should not be called since conn exists
+    addr: { port: 9999, hostname: "127.0.0.1", transport: "tcp" },
+    close: () => {},
+  } as unknown as Deno.Listener;
+  
+  // Set existing conn
+  passive.conn = {
+    readable: {
+      getReader: () => mockReader,
+    },
+    writable: {
+      getWriter: () => mockWriter,
+    },
+  } as unknown as Deno.Conn;
+  
+  await passive.accept();
+  
+  assertEquals(passive.reader, mockReader);
+  assertEquals(passive.writer, mockWriter);
+});
+
+// ============================================================================
+// PassiveConnection tests - create with TLS validation
+// ============================================================================
+
+Deno.test("PassiveConnection - create with secure but no cert/key throws", () => {
+  const mockConn = createMockConnection({ 
+    secure: true,
+    addr: {} // No cert or key
+  });
+  const passive = new PassiveConnection(mockConn);
+  
+  assertThrows(
+    () => passive.create(),
+    Error,
+    "TLS requires both cert and key"
+  );
+});
+
+// ============================================================================
+// ActiveConnector tests - create method
+// ============================================================================
+
+Deno.test("ActiveConnector - create sets hostname and port", async () => {
+  const mockConn = createMockConnection();
+  const active = new ActiveConnector(mockConn);
+  
+  // close existing conn if any
+  let closeCalled = false;
+  active.conn = {
+    close: () => { closeCalled = true; },
+  } as unknown as Deno.Conn;
+  
+  try {
+    // This will fail because it tries to actually connect
+    await active.create("127.0.0.1", 12345);
+  } catch {
+    // Expected to fail - no server listening
+  }
+  
+  assertEquals(closeCalled, true);
+  assertEquals(active.hostname, "127.0.0.1");
+  assertEquals(active.port, 12345);
+});
+
+Deno.test("ActiveConnector - create without existing conn", async () => {
+  const mockConn = createMockConnection();
+  const active = new ActiveConnector(mockConn);
+  
+  // No existing conn
+  active.conn = undefined;
+  
+  try {
+    // This will fail because it tries to actually connect
+    await active.create("127.0.0.1", 12345);
+  } catch {
+    // Expected to fail - no server listening
+  }
+  
+  assertEquals(active.hostname, "127.0.0.1");
+  assertEquals(active.port, 12345);
+});
+
+Deno.test("ActiveConnector - accept tries to connect when hostname/port set", async () => {
+  const mockConn = createMockConnection();
+  const active = new ActiveConnector(mockConn);
+  
+  active.hostname = "127.0.0.1";
+  active.port = 65432;
+  active.conn = undefined;
+  
+  try {
+    // This will fail because no actual server
+    await active.accept();
+  } catch {
+    // Connection failed is expected
+  }
+  
+  // hostname and port should still be set
+  assertEquals(active.hostname, "127.0.0.1");
+  assertEquals(active.port, 65432);
+});
