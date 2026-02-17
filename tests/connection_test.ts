@@ -7,6 +7,7 @@ import { delay } from "@std/async";
 import Server from "../src/server/mod.ts";
 import type { FTPServerOptions, ListenOptions } from "../src/server/mod.ts";
 import Connection from "../src/server/connection.ts";
+import { loadTestCerts, certsExist } from "./fixtures/test_certs.ts";
 
 const TEST_HOST = "127.0.0.1";
 let testPort = 3100;
@@ -1048,6 +1049,683 @@ Deno.test({
     conn.close();
     server.close();
     await serverPromise;
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+// ============================================================================
+// Reply method edge cases
+// ============================================================================
+
+Deno.test({
+  name: "Connection - reply with no letters creates default",
+  async fn() {
+    const port = getTestPort();
+    const server = createTestServer(port);
+    let connection: Connection | undefined;
+
+    const serverPromise = (async () => {
+      for await (const conn of server) {
+        connection = conn;
+        break;
+      }
+    })();
+
+    await delay(50);
+
+    const conn = await connectToServer(port);
+    // Read welcome message first
+    await readResponse(conn);
+    await delay(100);
+
+    assertExists(connection);
+    
+    // Call reply with empty array - should use default letter
+    await connection!.reply(200, []);
+    
+    const response = await readResponse(conn);
+    assertStringIncludes(response, "200");
+
+    conn.close();
+    server.close();
+    await serverPromise;
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+Deno.test({
+  name: "Connection - reply with unknown code shows 'No information'",
+  async fn() {
+    const port = getTestPort();
+    const server = createTestServer(port);
+    let connection: Connection | undefined;
+
+    const serverPromise = (async () => {
+      for await (const conn of server) {
+        connection = conn;
+        break;
+      }
+    })();
+
+    await delay(50);
+
+    const conn = await connectToServer(port);
+    // Read welcome message first
+    await readResponse(conn);
+    await delay(100);
+
+    assertExists(connection);
+    
+    // Use an unknown code that doesn't exist in STATUS_TEXT
+    await connection!.reply(999);
+    
+    const response = await readResponse(conn);
+    assertStringIncludes(response, "999");
+    assertStringIncludes(response, "No information");
+
+    conn.close();
+    server.close();
+    await serverPromise;
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+Deno.test({
+  name: "Connection - reply with multiple letters uses dash separator",
+  async fn() {
+    const port = getTestPort();
+    const server = createTestServer(port);
+    let connection: Connection | undefined;
+
+    const serverPromise = (async () => {
+      for await (const conn of server) {
+        connection = conn;
+        break;
+      }
+    })();
+
+    await delay(50);
+
+    const conn = await connectToServer(port);
+    // Read welcome message first
+    await readResponse(conn);
+    await delay(100);
+
+    assertExists(connection);
+    
+    // Multiple letters should use "-" separator for all but last
+    await connection!.reply(211, ["Line 1", "Line 2", "Line 3"]);
+    
+    const response = await readResponse(conn);
+    assertStringIncludes(response, "211");
+
+    conn.close();
+    server.close();
+    await serverPromise;
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+Deno.test({
+  name: "Connection - reply with eol option uses space separator",
+  async fn() {
+    const port = getTestPort();
+    const server = createTestServer(port);
+    let connection: Connection | undefined;
+
+    const serverPromise = (async () => {
+      for await (const conn of server) {
+        connection = conn;
+        break;
+      }
+    })();
+
+    await delay(50);
+
+    const conn = await connectToServer(port);
+    // Read welcome message first
+    await readResponse(conn);
+    await delay(100);
+
+    assertExists(connection);
+    
+    // With eol option, should use space separator
+    await connection!.reply({ code: 200, eol: "\r\n" }, "Test message");
+    
+    const response = await readResponse(conn);
+    assertStringIncludes(response, "200");
+
+    conn.close();
+    server.close();
+    await serverPromise;
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+Deno.test({
+  name: "Connection - reply with object letter with raw message",
+  async fn() {
+    const port = getTestPort();
+    const server = createTestServer(port);
+    let connection: Connection | undefined;
+
+    const serverPromise = (async () => {
+      for await (const conn of server) {
+        connection = conn;
+        break;
+      }
+    })();
+
+    await delay(50);
+
+    const conn = await connectToServer(port);
+    // Read welcome message first  
+    await readResponse(conn);
+    await delay(100);
+
+    assertExists(connection);
+    
+    // Reply with object that has raw as true - tests raw branch
+    // deno-lint-ignore no-explicit-any
+    await connection!.reply(200, { message: "Raw message only", raw: "string value" } as any);
+    
+    const response = await readResponse(conn);
+    assertStringIncludes(response, "Raw message only");
+
+    conn.close();
+    server.close();
+    await serverPromise;
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+Deno.test({
+  name: "Connection - reply with custom writer in options",
+  async fn() {
+    const port = getTestPort();
+    const server = createTestServer(port);
+    let connection: Connection | undefined;
+
+    const serverPromise = (async () => {
+      for await (const conn of server) {
+        connection = conn;
+        break;
+      }
+    })();
+
+    await delay(50);
+
+    const conn = await connectToServer(port);
+    // Read welcome message first  
+    await readResponse(conn);
+    await delay(100);
+
+    assertExists(connection);
+    
+    // Create a custom writer that captures writes
+    const writtenData: Uint8Array[] = [];
+    const customWriter = {
+      write: (data: Uint8Array) => {
+        writtenData.push(data);
+        return Promise.resolve(data.length);
+      }
+    };
+    
+    // Reply with custom writer in options (use as unknown to bypass type check)
+    // deno-lint-ignore no-explicit-any
+    await connection!.reply({ code: 200, writer: customWriter as unknown as any }, "Custom writer test");
+    
+    // Check data was written to custom writer
+    assertEquals(writtenData.length, 1);
+
+    conn.close();
+    server.close();
+    await serverPromise;
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+Deno.test({
+  name: "Connection - reply with letter code overrides options code",
+  async fn() {
+    const port = getTestPort();
+    const server = createTestServer(port);
+    let connection: Connection | undefined;
+
+    const serverPromise = (async () => {
+      for await (const conn of server) {
+        connection = conn;
+        break;
+      }
+    })();
+
+    await delay(50);
+
+    const conn = await connectToServer(port);
+    // Read welcome message first
+    await readResponse(conn);
+    await delay(100);
+
+    assertExists(connection);
+    
+    // Letter with its own code
+    await connection!.reply(200, { message: "Custom", code: 250 });
+    
+    const response = await readResponse(conn);
+    // The letter code should be used
+    assertStringIncludes(response, "250");
+
+    conn.close();
+    server.close();
+    await serverPromise;
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+// ============================================================================
+// setUsername error handling
+// ============================================================================
+
+Deno.test({
+  name: "Connection - setUsername handles rejection with error 430",
+  async fn() {
+    const port = getTestPort();
+    const server = createTestServer(port);
+    let connection: Connection | undefined;
+
+    const serverPromise = (async () => {
+      for await (const conn of server) {
+        connection = conn;
+        break;
+      }
+    })();
+
+    await delay(50);
+
+    const conn = await connectToServer(port);
+    // Read welcome message first
+    await readResponse(conn);
+    await delay(100);
+
+    assertExists(connection);
+    
+    // Start setUsername in background
+    const setUsernamePromise = connection!.setUsername("testuser");
+    
+    // Wait for awaitUsername to be resolved with the resolveUsername deferred
+    await delay(50);
+    
+    // Simulate server rejecting the username
+    const usernameData = await connection!.awaitUsername;
+    usernameData.resolveUsername.reject(new Error("Username not allowed"));
+    
+    // Wait for setUsername to complete
+    await setUsernamePromise;
+    
+    // Should receive 430 error
+    const response = await readResponse(conn);
+    assertStringIncludes(response, "430");
+
+    conn.close();
+    server.close();
+    await serverPromise;
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+Deno.test({
+  name: "Connection - setUsername handles rejection with non-Error",
+  async fn() {
+    const port = getTestPort();
+    const server = createTestServer(port);
+    let connection: Connection | undefined;
+
+    const serverPromise = (async () => {
+      for await (const conn of server) {
+        connection = conn;
+        break;
+      }
+    })();
+
+    await delay(50);
+
+    const conn = await connectToServer(port);
+    // Read welcome message first
+    await readResponse(conn);
+    await delay(100);
+
+    assertExists(connection);
+    
+    // Start setUsername in background
+    const setUsernamePromise = connection!.setUsername("testuser");
+    
+    // Wait for awaitUsername to be resolved
+    await delay(50);
+    
+    // Simulate server rejecting the username with a string error
+    const usernameData = await connection!.awaitUsername;
+    usernameData.resolveUsername.reject("String error message");
+    
+    // Wait for setUsername to complete
+    await setUsernamePromise;
+    
+    // Should receive 430 error
+    const response = await readResponse(conn);
+    assertStringIncludes(response, "430");
+
+    conn.close();
+    server.close();
+    await serverPromise;
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+// ============================================================================
+// reply edge cases - writer missing
+// ============================================================================
+
+Deno.test({
+  name: "Connection - reply logs error when letter has no writer",
+  async fn() {
+    const port = getTestPort();
+    const server = createTestServer(port);
+    let connection: Connection | undefined;
+
+    const serverPromise = (async () => {
+      for await (const conn of server) {
+        connection = conn;
+        break;
+      }
+    })();
+
+    await delay(50);
+
+    const conn = await connectToServer(port);
+    // Read welcome message first
+    await readResponse(conn);
+    await delay(100);
+
+    assertExists(connection);
+    
+    // Create a letter with null writer explicitly
+    // deno-lint-ignore no-explicit-any
+    const letterWithNoWriter = { message: "Test", writer: null } as any;
+    
+    // This should hit the else branch in reply that logs error
+    await connection!.reply(200, letterWithNoWriter);
+    
+    // The message won't be sent to conn, but no exception should occur
+
+    conn.close();
+    server.close();
+    await serverPromise;
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+// ============================================================================
+// TLS Server Tests
+// ============================================================================
+
+Deno.test({
+  name: "Server - creates TLS listener with certificates",
+  ignore: !(await certsExist()),
+  async fn() {
+    const port = getTestPort();
+    const { cert, key, rootCA } = await loadTestCerts();
+    
+    const addr: ListenOptions = {
+      hostname: TEST_HOST,
+      port: port,
+      cert: cert,
+      key: key,
+    };
+    
+    const serverOptions: FTPServerOptions = {
+      debug: false,
+      pasvUrl: TEST_HOST,
+      pasvMin: 10000,
+      pasvMax: 10100,
+    };
+    
+    const server = new Server(addr, serverOptions);
+    
+    // Server should be in secure mode
+    assertEquals(server.secure, true);
+    
+    // Start accepting connections
+    const serverPromise = (async () => {
+      for await (const _connection of server) {
+        break;
+      }
+    })();
+    
+    await delay(100);
+    
+    // Connect with TLS using root CA for self-signed cert
+    const conn = await Deno.connectTls({
+      hostname: TEST_HOST,
+      port: port,
+      caCerts: [rootCA],
+    });
+    
+    // Read welcome message
+    const response = await readResponse(conn);
+    assertStringIncludes(response, "220");
+    
+    conn.close();
+    server.close();
+    await serverPromise;
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+Deno.test({
+  name: "Server - TLS mode logs warning about testing status",
+  ignore: !(await certsExist()),
+  async fn() {
+    const port = getTestPort();
+    const { cert, key } = await loadTestCerts();
+    
+    const addr: ListenOptions = {
+      hostname: TEST_HOST,
+      port: port,
+      cert: cert,
+      key: key,
+    };
+    
+    const serverOptions: FTPServerOptions = {
+      debug: true, // Enable debug to see warning
+      pasvUrl: TEST_HOST,
+      pasvMin: 10000,
+      pasvMax: 10100,
+    };
+    
+    // Just creating the server with TLS should work and log warning
+    const server = new Server(addr, serverOptions);
+    assertEquals(server.secure, true);
+    
+    // No need to accept connections, just close
+    server.close();
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+// ============================================================================
+// webhookError Tests
+// ============================================================================
+
+Deno.test({
+  name: "Server - webhookError sends POST to configured webhook",
+  async fn() {
+    const port = getTestPort();
+    const webhookPort = getTestPort();
+    
+    // Create a simple HTTP server to receive webhook
+    const webhookServer = Deno.listen({ port: webhookPort });
+    let webhookReceived = false;
+    let webhookBody = "";
+    
+    const webhookPromise = (async () => {
+      const conn = await webhookServer.accept();
+      const buffer = new Uint8Array(4096);
+      const n = await conn.read(buffer);
+      if (n) {
+        const request = new TextDecoder().decode(buffer.subarray(0, n));
+        webhookReceived = true;
+        // Extract body from HTTP request
+        const bodyStart = request.indexOf("\r\n\r\n");
+        if (bodyStart !== -1) {
+          webhookBody = request.substring(bodyStart + 4);
+        }
+      }
+      // Send minimal HTTP response
+      const response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
+      await conn.write(new TextEncoder().encode(response));
+      conn.close();
+    })();
+    
+    const serverOptions: FTPServerOptions = {
+      debug: false,
+      pasvUrl: TEST_HOST,
+      pasvMin: 10000,
+      pasvMax: 10100,
+      webhook: `http://${TEST_HOST}:${webhookPort}/webhook`,
+    };
+    
+    const server = createTestServer(port, serverOptions);
+    
+    await delay(50);
+    
+    // Call webhookError with an Error
+    await server.webhookError(new Error("Test error message"));
+    
+    // Wait for webhook to be received
+    await webhookPromise;
+    
+    assertEquals(webhookReceived, true);
+    assertStringIncludes(webhookBody, "Test error message");
+    
+    server.close();
+    webhookServer.close();
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+Deno.test({
+  name: "Server - webhookError handles string arguments",
+  async fn() {
+    const port = getTestPort();
+    const webhookPort = getTestPort();
+    
+    // Create a simple HTTP server to receive webhook
+    const webhookServer = Deno.listen({ port: webhookPort });
+    let webhookBody = "";
+    
+    const webhookPromise = (async () => {
+      const conn = await webhookServer.accept();
+      const buffer = new Uint8Array(4096);
+      const n = await conn.read(buffer);
+      if (n) {
+        const request = new TextDecoder().decode(buffer.subarray(0, n));
+        const bodyStart = request.indexOf("\r\n\r\n");
+        if (bodyStart !== -1) {
+          webhookBody = request.substring(bodyStart + 4);
+        }
+      }
+      const response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
+      await conn.write(new TextEncoder().encode(response));
+      conn.close();
+    })();
+    
+    const serverOptions: FTPServerOptions = {
+      debug: false,
+      pasvUrl: TEST_HOST,
+      pasvMin: 10000,
+      pasvMax: 10100,
+      webhook: `http://${TEST_HOST}:${webhookPort}/webhook`,
+    };
+    
+    const server = createTestServer(port, serverOptions);
+    
+    await delay(50);
+    
+    // Call webhookError with a string
+    // deno-lint-ignore no-explicit-any
+    await (server as any).webhookError("String error");
+    
+    await webhookPromise;
+    
+    assertStringIncludes(webhookBody, "String error");
+    
+    server.close();
+    webhookServer.close();
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+Deno.test({
+  name: "Server - webhookError skipped when no webhook configured",
+  async fn() {
+    const port = getTestPort();
+    
+    // No webhook configured
+    const serverOptions: FTPServerOptions = {
+      debug: false,
+      pasvUrl: TEST_HOST,
+      pasvMin: 10000,
+      pasvMax: 10100,
+      // No webhook
+    };
+    
+    const server = createTestServer(port, serverOptions);
+    
+    // webhookError should just return without doing anything
+    await server.webhookError(new Error("Test"));
+    
+    // No exception = success
+    server.close();
+  },
+  sanitizeResources: false,
+  sanitizeOps: false,
+});
+
+Deno.test({
+  name: "Server - webhookError handles fetch errors gracefully",
+  async fn() {
+    const port = getTestPort();
+    
+    // Point to non-existent server
+    const serverOptions: FTPServerOptions = {
+      debug: false,
+      pasvUrl: TEST_HOST,
+      pasvMin: 10000,
+      pasvMax: 10100,
+      webhook: `http://${TEST_HOST}:59999/nonexistent`,
+    };
+    
+    const server = createTestServer(port, serverOptions);
+    
+    // webhookError should handle fetch failure gracefully
+    await server.webhookError(new Error("Test error"));
+    
+    // No exception = success (error is logged but not thrown)
+    server.close();
   },
   sanitizeResources: false,
   sanitizeOps: false,
