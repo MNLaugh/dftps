@@ -300,3 +300,129 @@ Deno.test("IterableReader - handles UTF-8 data", async () => {
   
   assertEquals(lines, ["STOR été-2026.txt"]);
 });
+
+// ============================================
+// Error handling tests - cover error branches
+// ============================================
+
+// Helper to create a mock connection that throws an error
+function createErrorConn(error: Error): Deno.Conn {
+  const readable = new ReadableStream<Uint8Array>({
+    pull() {
+      throw error;
+    },
+  });
+
+  return {
+    readable,
+    localAddr: { transport: "tcp", hostname: "127.0.0.1", port: 21 },
+    remoteAddr: { transport: "tcp", hostname: "127.0.0.1", port: 12345 },
+    close: () => {},
+    closeWrite: () => Promise.resolve(),
+    writable: new WritableStream(),
+    ref: () => {},
+    unref: () => {},
+  } as unknown as Deno.Conn;
+}
+
+Deno.test("IterableReader - handles BadResource error gracefully", async () => {
+  const mockConn = createErrorConn(new Deno.errors.BadResource("Connection closed"));
+  
+  const reader = new IterableReader(mockConn);
+  const lines: string[] = [];
+  
+  for await (const chunk of reader) {
+    lines.push(new TextDecoder().decode(chunk));
+  }
+  
+  assertEquals(lines, []);
+});
+
+Deno.test("IterableReader - handles Interrupted error gracefully", async () => {
+  const mockConn = createErrorConn(new Deno.errors.Interrupted("Interrupted"));
+  
+  const reader = new IterableReader(mockConn);
+  const lines: string[] = [];
+  
+  for await (const chunk of reader) {
+    lines.push(new TextDecoder().decode(chunk));
+  }
+  
+  assertEquals(lines, []);
+});
+
+Deno.test("IterableReader - handles ConnectionReset error gracefully", async () => {
+  const mockConn = createErrorConn(new Deno.errors.ConnectionReset("Connection reset"));
+  
+  const reader = new IterableReader(mockConn);
+  const lines: string[] = [];
+  
+  for await (const chunk of reader) {
+    lines.push(new TextDecoder().decode(chunk));
+  }
+  
+  assertEquals(lines, []);
+});
+
+Deno.test("IterableReader - handles UnexpectedEof error gracefully", async () => {
+  const error = new Error("Unexpected end of file");
+  error.name = "UnexpectedEof";
+  const mockConn = createErrorConn(error);
+  
+  const reader = new IterableReader(mockConn);
+  const lines: string[] = [];
+  
+  for await (const chunk of reader) {
+    lines.push(new TextDecoder().decode(chunk));
+  }
+  
+  assertEquals(lines, []);
+});
+
+Deno.test("IterableReader - handles ConnectionRefused error gracefully", async () => {
+  const error = new Error("Connection refused");
+  error.name = "ConnectionRefused";
+  const mockConn = createErrorConn(error);
+  
+  const reader = new IterableReader(mockConn);
+  const lines: string[] = [];
+  
+  for await (const chunk of reader) {
+    lines.push(new TextDecoder().decode(chunk));
+  }
+  
+  assertEquals(lines, []);
+});
+
+Deno.test("IterableReader - handles ConnectionAborted error gracefully", async () => {
+  const error = new Error("Connection aborted");
+  error.name = "ConnectionAborted";
+  const mockConn = createErrorConn(error);
+  
+  const reader = new IterableReader(mockConn);
+  const lines: string[] = [];
+  
+  for await (const chunk of reader) {
+    lines.push(new TextDecoder().decode(chunk));
+  }
+  
+  assertEquals(lines, []);
+});
+
+Deno.test("IterableReader - rethrows unknown errors", async () => {
+  const mockConn = createErrorConn(new Error("Unknown error"));
+  
+  const reader = new IterableReader(mockConn);
+  let errorThrown = false;
+  
+  try {
+    for await (const _ of reader) {
+      // Should not reach here
+    }
+  } catch (e) {
+    errorThrown = true;
+    assertEquals((e as Error).message, "Unknown error");
+  }
+  
+  assertEquals(errorThrown, true);
+});

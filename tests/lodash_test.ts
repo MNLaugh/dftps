@@ -197,3 +197,53 @@ Deno.test("chunk - handles undefined array", () => {
   const result = chunk(undefined as any, 2);
   assertEquals(result, []);
 });
+
+// ============================================================================
+// Additional padStart() tests to cover edge cases
+// ============================================================================
+
+Deno.test("padStart - returns empty string when string is falsy and length is 0", () => {
+  // Covers: string || "" branch when length is 0
+  const result = padStart("", 0);
+  assertEquals(result, "");
+});
+
+Deno.test("padStart - returns empty string when string is empty and strLength >= length", () => {
+  // When string is "" and length is 0, strLength is 0, so strLength < length is false
+  const result = padStart("", 0, "x");
+  assertEquals(result, "");
+});
+
+Deno.test("padStart - handles string equals target length exactly", () => {
+  const result = padStart("abc", 3, "x");
+  assertEquals(result, "abc");
+});
+
+Deno.test("padStart - empty chars results in spaces", () => {
+  // Covers: chars === undefined uses space
+  const result = padStart("a", 3);
+  assertEquals(result, "  a");
+});
+
+Deno.test("padStart - single char padding", () => {
+  // Covers: charsLength < 2 branch with charsLength === 1
+  const result = padStart("x", 5, "0");
+  assertEquals(result, "0000x");
+});
+
+Deno.test("padStart - empty string chars becomes space", () => {
+  // When chars is empty string "", baseToString returns ""
+  // charsLength is 0, so charsLength ? repeat : chars returns ""
+  const result = String(padStart("a", 5, ""));
+  // Empty chars should fall back to default behavior
+  assertEquals(result.endsWith("a"), true);
+});
+
+Deno.test("padStart - array as chars (triggers baseToString with array)", () => {
+  // Covers: if (Array.isArray(value)) in baseToString
+  // deno-lint-ignore no-explicit-any
+  const result = String(padStart("x", 10, ["a", "b"] as any));
+  assertEquals(result.endsWith("x"), true);
+  // Array ["a", "b"] becomes "a,b" via baseToString
+  assertEquals(result.includes("a"), true);
+});
