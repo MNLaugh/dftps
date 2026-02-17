@@ -1,0 +1,101 @@
+{
+  "scriptId": "335",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/_utils/iterableReader.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 2202,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 214,
+          "endOffset": 251,
+          "count": 8
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "IterableReader",
+      "ranges": [
+        {
+          "startOffset": 255,
+          "endOffset": 394,
+          "count": 8
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "close",
+      "ranges": [
+        {
+          "startOffset": 397,
+          "endOffset": 467,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 608,
+          "endOffset": 2168,
+          "count": 7
+        },
+        {
+          "startOffset": 736,
+          "endOffset": 2164,
+          "count": 16
+        },
+        {
+          "startOffset": 827,
+          "endOffset": 1054,
+          "count": 7
+        },
+        {
+          "startOffset": 935,
+          "endOffset": 1027,
+          "count": 1
+        },
+        {
+          "startOffset": 1054,
+          "endOffset": 1274,
+          "count": 9
+        },
+        {
+          "startOffset": 1274,
+          "endOffset": 1444,
+          "count": 8
+        },
+        {
+          "startOffset": 1444,
+          "endOffset": 1556,
+          "count": 9
+        },
+        {
+          "startOffset": 1556,
+          "endOffset": 1745,
+          "count": 2
+        },
+        {
+          "startOffset": 1754,
+          "endOffset": 2158,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

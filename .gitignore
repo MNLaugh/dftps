@@ -1,3 +1,17 @@
 .vscode
 test.ts
-/tools/dftps.zip 
+/tools/dftps.zip
+
+# Generated certificates
+/tools/certs/
+
+# Test databases
+*.db
+test_*.db
+
+# Coverage
+coverage/
+
+# Deno/Node
+node_modules/
+deno.lock

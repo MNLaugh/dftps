@@ -1,0 +1,61 @@
+{
+  "scriptId": "375",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/server/commands/REST.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 848,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 30,
+          "endOffset": 312,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<static_initializer>",
+      "ranges": [
+        {
+          "startOffset": 46,
+          "endOffset": 265,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Rest",
+      "ranges": [
+        {
+          "startOffset": 316,
+          "endOffset": 526,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "handler",
+      "ranges": [
+        {
+          "startOffset": 529,
+          "endOffset": 845,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

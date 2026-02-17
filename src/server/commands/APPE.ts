@@ -4,10 +4,9 @@ import Stor from "./STOR.ts";
 
 export default class Appe {
   static directive = "APPE";
-  static syntax = '{{cmd}} <path>';
-  static description = 'Append to a file';
+  static syntax = "{{cmd}} <path>";
+  static description = "Append to a file";
   static flags = {};
-
 
   description = Appe.description;
   syntax = Appe.syntax;
@@ -19,7 +18,7 @@ export default class Appe {
   async handler(): Promise<void> {
     try {
       return await new Stor(this.conn, this.data).handler();
-    } catch(e) {
+    } catch (e) {
       throw e;
     }
   }

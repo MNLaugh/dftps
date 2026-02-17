@@ -3,10 +3,9 @@ import type { CommandData } from "./_REGISTRY.ts";
 
 export default class Noop {
   static directive = "NOOP";
-  static syntax = '{{cmd}}';
-  static description = 'No operation';
+  static syntax = "{{cmd}}";
+  static description = "No operation";
   static flags = {};
-
 
   description = Noop.description;
   syntax = Noop.syntax;

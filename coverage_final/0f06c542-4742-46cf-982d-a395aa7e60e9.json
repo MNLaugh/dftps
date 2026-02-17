@@ -1,0 +1,22 @@
+{
+  "scriptId": "419",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/node_modules/.deno/@node-rs+argon2@2.0.2/node_modules/@node-rs/argon2/index.js",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 927,
+          "count": 1
+        },
+        {
+          "startOffset": 189,
+          "endOffset": 355,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

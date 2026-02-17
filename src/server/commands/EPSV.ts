@@ -4,10 +4,9 @@ import PassiveConnection from "../connectors/passive.ts";
 
 export default class Epsv {
   static directive = "EPSV";
-  static syntax = '{{cmd}} [<protocol>]';
-  static description = 'Initiate passive mode';
+  static syntax = "{{cmd}} [<protocol>]";
+  static description = "Initiate passive mode";
   static flags = {};
-
 
   description = Epsv.description;
   syntax = Epsv.syntax;
@@ -22,8 +21,9 @@ export default class Epsv {
       const { port } = this.conn.connector.create();
       return await this.conn.reply(229, `EPSV OK (|||${port}|)`);
     } catch (e) {
-      e.code ||= 425;
-      throw e;
+      const err = e as Error & { code?: number };
+      err.code ||= 425;
+      throw err;
     }
   }
 }

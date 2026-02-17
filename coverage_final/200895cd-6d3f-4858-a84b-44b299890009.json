@@ -1,0 +1,61 @@
+{
+  "scriptId": "477",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/server/commands/MLSD.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 2102,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 234,
+          "endOffset": 491,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<static_initializer>",
+      "ranges": [
+        {
+          "startOffset": 250,
+          "endOffset": 444,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Mlsd",
+      "ranges": [
+        {
+          "startOffset": 495,
+          "endOffset": 705,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "handler",
+      "ranges": [
+        {
+          "startOffset": 708,
+          "endOffset": 2099,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "scriptId": "371",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/server/commands/OPTS.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 1208,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "utf8",
+      "ranges": [
+        {
+          "startOffset": 29,
+          "endOffset": 229,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 263,
+          "endOffset": 465,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<static_initializer>",
+      "ranges": [
+        {
+          "startOffset": 279,
+          "endOffset": 418,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Opts",
+      "ranges": [
+        {
+          "startOffset": 469,
+          "endOffset": 679,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "handler",
+      "ranges": [
+        {
+          "startOffset": 682,
+          "endOffset": 1205,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

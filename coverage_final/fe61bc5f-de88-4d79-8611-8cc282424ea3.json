@@ -1,0 +1,76 @@
+{
+  "scriptId": "382",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/server/commands/SITE.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 1245,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 30,
+          "endOffset": 267,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<static_initializer>",
+      "ranges": [
+        {
+          "startOffset": 46,
+          "endOffset": 220,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Site",
+      "ranges": [
+        {
+          "startOffset": 271,
+          "endOffset": 481,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "handler",
+      "ranges": [
+        {
+          "startOffset": 484,
+          "endOffset": 1242,
+          "count": 1
+        },
+        {
+          "startOffset": 597,
+          "endOffset": 1041,
+          "count": 0
+        },
+        {
+          "startOffset": 1050,
+          "endOffset": 1103,
+          "count": 0
+        },
+        {
+          "startOffset": 1111,
+          "endOffset": 1238,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

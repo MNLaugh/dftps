@@ -1,44 +1,13 @@
-import {
-  Database,
-  MySQLConnector,
-  MongoDBConnector,
-  PostgresConnector,
-  SQLite3Connector
-} from '../../deps.ts';
-import type { MongoDBOptions, MySQLOptions, PostgresOptions, SQLite3Options } from '../../deps.ts';
+/**
+ * Database module for DFtpS - Using native SQLite
+ */
 
-import Users from "./Users.ts";
+export { createDb, type Database, type DatabaseConfig, getDb } from "./database.ts";
+export { type NewUser, type User } from "./schema.ts";
+export * as schema from "./schema.ts";
 
-type Options = MySQLOptions | MongoDBOptions | PostgresOptions | SQLite3Options
+// Re-export createDb as default for backwards compatibility
+export { createDb as default } from "./database.ts";
 
-export type Configs = Options & { connector?: "MariaDB" | "MongoDB" | "MySQL" | "PostgreSQL" | "SQLite" }
-export default async function createDb(config: Configs): Promise<{ db: Database, Users: typeof Users }> {
-  if (!config.connector) throw new Error("You need set database config in your config file!");
-  const conf = config.connector;
-  delete config.connector;
-  let connector: MySQLConnector | MongoDBConnector | PostgresConnector | SQLite3Connector
-
-  switch(conf) {
-    case "MariaDB":
-    case "MySQL":
-      connector = new MySQLConnector((config as MySQLOptions));
-      break;
-    case "MongoDB":
-      connector = new MongoDBConnector((config as MongoDBOptions));
-      break;
-    case "PostgreSQL":
-      connector = new PostgresConnector((config as PostgresOptions));
-      break;
-    case "SQLite":
-      connector = new SQLite3Connector((config as SQLite3Options));
-      break;
-    default:
-      throw new Error("You need set database config in your config file!");
-  }
-
-  const db = new Database(connector);
-
-  db.link([Users]);
-  await db.sync();
-  return { db, Users }
-}
+// Legacy type exports for API compatibility
+export type Configs = import("./database.ts").DatabaseConfig;

@@ -3,10 +3,9 @@ import type { CommandData } from "./_REGISTRY.ts";
 
 export default class Mode {
   static directive = "MODE";
-  static syntax = '{{cmd}} <mode>';
-  static description = 'Sets the transfer mode (Stream, Block, or Compressed)';
+  static syntax = "{{cmd}} <mode>";
+  static description = "Sets the transfer mode (Stream, Block, or Compressed)";
   static flags = {};
-
 
   description = Mode.description;
   syntax = Mode.syntax;

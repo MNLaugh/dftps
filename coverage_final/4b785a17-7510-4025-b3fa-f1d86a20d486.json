@@ -1,0 +1,106 @@
+{
+  "scriptId": "368",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/server/commands/TYPE.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 994,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 30,
+          "endOffset": 274,
+          "count": 5
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<static_initializer>",
+      "ranges": [
+        {
+          "startOffset": 46,
+          "endOffset": 227,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Type",
+      "ranges": [
+        {
+          "startOffset": 278,
+          "endOffset": 488,
+          "count": 5
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "handler",
+      "ranges": [
+        {
+          "startOffset": 491,
+          "endOffset": 991,
+          "count": 5
+        },
+        {
+          "startOffset": 533,
+          "endOffset": 570,
+          "count": 4
+        },
+        {
+          "startOffset": 572,
+          "endOffset": 623,
+          "count": 1
+        },
+        {
+          "startOffset": 623,
+          "endOffset": 667,
+          "count": 4
+        },
+        {
+          "startOffset": 667,
+          "endOffset": 714,
+          "count": 1
+        },
+        {
+          "startOffset": 714,
+          "endOffset": 892,
+          "count": 3
+        },
+        {
+          "startOffset": 758,
+          "endOffset": 788,
+          "count": 2
+        },
+        {
+          "startOffset": 790,
+          "endOffset": 838,
+          "count": 2
+        },
+        {
+          "startOffset": 838,
+          "endOffset": 892,
+          "count": 1
+        },
+        {
+          "startOffset": 892,
+          "endOffset": 990,
+          "count": 3
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

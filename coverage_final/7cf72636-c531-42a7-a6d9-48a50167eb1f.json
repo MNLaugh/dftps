@@ -1,0 +1,146 @@
+{
+  "scriptId": "336",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/db/Users.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 2595,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "get db",
+      "ranges": [
+        {
+          "startOffset": 300,
+          "endOffset": 334,
+          "count": 18
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "findByUsername",
+      "ranges": [
+        {
+          "startOffset": 383,
+          "endOffset": 528,
+          "count": 4
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "findById",
+      "ranges": [
+        {
+          "startOffset": 571,
+          "endOffset": 692,
+          "count": 2
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "findAll",
+      "ranges": [
+        {
+          "startOffset": 731,
+          "endOffset": 826,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "create",
+      "ranges": [
+        {
+          "startOffset": 869,
+          "endOffset": 1096,
+          "count": 9
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "update",
+      "ranges": [
+        {
+          "startOffset": 1141,
+          "endOffset": 1945,
+          "count": 1
+        },
+        {
+          "startOffset": 1243,
+          "endOffset": 1319,
+          "count": 0
+        },
+        {
+          "startOffset": 1357,
+          "endOffset": 1433,
+          "count": 0
+        },
+        {
+          "startOffset": 1667,
+          "endOffset": 1733,
+          "count": 0
+        },
+        {
+          "startOffset": 1763,
+          "endOffset": 1788,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "delete",
+      "ranges": [
+        {
+          "startOffset": 1990,
+          "endOffset": 2103,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "where",
+      "ranges": [
+        {
+          "startOffset": 2175,
+          "endOffset": 2570,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "get",
+      "ranges": [
+        {
+          "startOffset": 2221,
+          "endOffset": 2559,
+          "count": 1
+        },
+        {
+          "startOffset": 2370,
+          "endOffset": 2374,
+          "count": 0
+        },
+        {
+          "startOffset": 2385,
+          "endOffset": 2558,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

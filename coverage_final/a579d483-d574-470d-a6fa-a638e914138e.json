@@ -1,0 +1,115 @@
+{
+  "scriptId": "333",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/tests/server_test.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 1987,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "getTestPort",
+      "ranges": [
+        {
+          "startOffset": 279,
+          "endOffset": 326,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "createTestServer",
+      "ranges": [
+        {
+          "startOffset": 361,
+          "endOffset": 637,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "connectToServer",
+      "ranges": [
+        {
+          "startOffset": 669,
+          "endOffset": 785,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "readResponse",
+      "ranges": [
+        {
+          "startOffset": 826,
+          "endOffset": 1190,
+          "count": 1
+        },
+        {
+          "startOffset": 1122,
+          "endOffset": 1126,
+          "count": 0
+        },
+        {
+          "startOffset": 1132,
+          "endOffset": 1188,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 948,
+          "endOffset": 964,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "_sendCommand",
+      "ranges": [
+        {
+          "startOffset": 1250,
+          "endOffset": 1360,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "fn",
+      "ranges": [
+        {
+          "startOffset": 1430,
+          "endOffset": 1932,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 1595,
+          "endOffset": 1682,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

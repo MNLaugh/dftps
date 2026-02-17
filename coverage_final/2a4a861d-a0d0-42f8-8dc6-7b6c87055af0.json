@@ -1,0 +1,91 @@
+{
+  "scriptId": "376",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/server/commands/STOR.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 1786,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 30,
+          "endOffset": 260,
+          "count": 4
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<static_initializer>",
+      "ranges": [
+        {
+          "startOffset": 46,
+          "endOffset": 213,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Stor",
+      "ranges": [
+        {
+          "startOffset": 264,
+          "endOffset": 474,
+          "count": 4
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "handler",
+      "ranges": [
+        {
+          "startOffset": 477,
+          "endOffset": 1783,
+          "count": 4
+        },
+        {
+          "startOffset": 530,
+          "endOffset": 627,
+          "count": 2
+        },
+        {
+          "startOffset": 627,
+          "endOffset": 693,
+          "count": 0
+        },
+        {
+          "startOffset": 693,
+          "endOffset": 721,
+          "count": 2
+        },
+        {
+          "startOffset": 721,
+          "endOffset": 867,
+          "count": 1
+        },
+        {
+          "startOffset": 867,
+          "endOffset": 1552,
+          "count": 0
+        },
+        {
+          "startOffset": 1561,
+          "endOffset": 1779,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

@@ -1,0 +1,203 @@
+{
+  "scriptId": "336",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/server/mod.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 5738,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 206,
+          "endOffset": 349,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Server",
+      "ranges": [
+        {
+          "startOffset": 353,
+          "endOffset": 1563,
+          "count": 1
+        },
+        {
+          "startOffset": 965,
+          "endOffset": 979,
+          "count": 0
+        },
+        {
+          "startOffset": 981,
+          "endOffset": 1327,
+          "count": 0
+        },
+        {
+          "startOffset": 1531,
+          "endOffset": 1539,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "debug",
+      "ranges": [
+        {
+          "startOffset": 1604,
+          "endOffset": 1681,
+          "count": 6
+        },
+        {
+          "startOffset": 1650,
+          "endOffset": 1677,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "webhookError",
+      "ranges": [
+        {
+          "startOffset": 1684,
+          "endOffset": 2459,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "close",
+      "ranges": [
+        {
+          "startOffset": 2504,
+          "endOffset": 2958,
+          "count": 1
+        },
+        {
+          "startOffset": 2663,
+          "endOffset": 2913,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "trackConnection",
+      "ranges": [
+        {
+          "startOffset": 2961,
+          "endOffset": 3069,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "untrackConnection",
+      "ranges": [
+        {
+          "startOffset": 3072,
+          "endOffset": 3259,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "iterateConnections",
+      "ranges": [
+        {
+          "startOffset": 3294,
+          "endOffset": 4436,
+          "count": 1
+        },
+        {
+          "startOffset": 4058,
+          "endOffset": 4432,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 3699,
+          "endOffset": 3990,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "acceptAndIterateFtpConnections",
+      "ranges": [
+        {
+          "startOffset": 4701,
+          "endOffset": 5566,
+          "count": 3
+        },
+        {
+          "startOffset": 4768,
+          "endOffset": 4775,
+          "count": 1
+        },
+        {
+          "startOffset": 4775,
+          "endOffset": 4876,
+          "count": 2
+        },
+        {
+          "startOffset": 4876,
+          "endOffset": 5323,
+          "count": 1
+        },
+        {
+          "startOffset": 4992,
+          "endOffset": 5031,
+          "count": 0
+        },
+        {
+          "startOffset": 5108,
+          "endOffset": 5317,
+          "count": 0
+        },
+        {
+          "startOffset": 5323,
+          "endOffset": 5562,
+          "count": 1
+        },
+        {
+          "startOffset": 5562,
+          "endOffset": 5565,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 5569,
+          "endOffset": 5712,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

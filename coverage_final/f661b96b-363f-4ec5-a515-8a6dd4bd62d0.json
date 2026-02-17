@@ -1,0 +1,61 @@
+{
+  "scriptId": "381",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/server/commands/ABOR.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 836,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 30,
+          "endOffset": 224,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<static_initializer>",
+      "ranges": [
+        {
+          "startOffset": 46,
+          "endOffset": 177,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Abor",
+      "ranges": [
+        {
+          "startOffset": 228,
+          "endOffset": 438,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "handler",
+      "ranges": [
+        {
+          "startOffset": 441,
+          "endOffset": 833,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

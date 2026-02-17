@@ -1,0 +1,61 @@
+{
+  "scriptId": "370",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/server/commands/LIST.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 2372,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 121,
+          "endOffset": 435,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<static_initializer>",
+      "ranges": [
+        {
+          "startOffset": 137,
+          "endOffset": 388,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "List",
+      "ranges": [
+        {
+          "startOffset": 439,
+          "endOffset": 649,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "handler",
+      "ranges": [
+        {
+          "startOffset": 652,
+          "endOffset": 2369,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

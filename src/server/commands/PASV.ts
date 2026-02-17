@@ -4,10 +4,9 @@ import PassiveConnection from "../connectors/passive.ts";
 
 export default class Pasv {
   static directive = "PASV";
-  static syntax = '{{cmd}} <mode>';
-  static description = 'Initiate passive mode';
+  static syntax = "{{cmd}} <mode>";
+  static description = "Initiate passive mode";
   static flags = {};
-
 
   description = Pasv.description;
   syntax = Pasv.syntax;
@@ -23,10 +22,11 @@ export default class Pasv {
 
       const i1 = (port / 256) | 0;
       const i2 = port % 256;
-      return await this.conn.reply(227, `Entering Passive Mode (${hostname.split('.').join(',')},${i1},${i2})`);
+      return await this.conn.reply(227, `Entering Passive Mode (${hostname.split(".").join(",")},${i1},${i2})`);
     } catch (e) {
-      e.code ||= 425;
-      throw e;
+      const err = e as Error & { code?: number };
+      err.code ||= 425;
+      throw err;
     }
   }
 }

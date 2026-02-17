@@ -1,0 +1,66 @@
+{
+  "scriptId": "384",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/server/commands/APPE.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 599,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 60,
+          "endOffset": 248,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<static_initializer>",
+      "ranges": [
+        {
+          "startOffset": 76,
+          "endOffset": 201,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Appe",
+      "ranges": [
+        {
+          "startOffset": 252,
+          "endOffset": 462,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "handler",
+      "ranges": [
+        {
+          "startOffset": 465,
+          "endOffset": 596,
+          "count": 1
+        },
+        {
+          "startOffset": 560,
+          "endOffset": 592,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

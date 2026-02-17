@@ -1,0 +1,49 @@
+{
+  "scriptId": "335",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/db/database.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 995,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "createDb",
+      "ranges": [
+        {
+          "startOffset": 212,
+          "endOffset": 819,
+          "count": 9
+        },
+        {
+          "startOffset": 277,
+          "endOffset": 348,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "getDb",
+      "ranges": [
+        {
+          "startOffset": 827,
+          "endOffset": 950,
+          "count": 27
+        },
+        {
+          "startOffset": 857,
+          "endOffset": 935,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

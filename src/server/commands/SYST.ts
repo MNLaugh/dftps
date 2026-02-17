@@ -2,12 +2,12 @@ import Connection from "../connection.ts";
 import type { CommandData } from "./_REGISTRY.ts";
 
 export default class Syst {
-  static directive = 'SYST';
-  static syntax = '{{cmd}}';
-  static description = 'Return system type';
+  static directive = "SYST";
+  static syntax = "{{cmd}}";
+  static description = "Return system type";
   static flags = {
-    noAuth: true
-  }
+    noAuth: true,
+  };
 
   description = Syst.description;
   syntax = Syst.syntax;

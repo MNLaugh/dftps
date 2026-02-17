@@ -2,8 +2,16 @@
 
 ![logo](./assets/dftps_logo.png)
 [![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/dftps/mod.ts)
-  
+
 DFtpS is an FTP server based on [ftp-srv](https://github.com/autovance/ftp-srv) with Deno.
+
+**Version 2.0.0** - Fully modernized for Deno 2.x with:
+
+- JSR-based imports (`@std/*`, `@cliffy/*`)
+- Drizzle ORM (replacing deprecated denodb)
+- Argon2 password hashing (replacing scrypt)
+- Native Streams API (no more BufReader/BufWriter)
+- Full TypeScript strict mode
 
 Check our guide in [https://devartsite.github.io/dftps-guide/guide/](https://devartsite.github.io/dftps-guide/)
 
@@ -31,7 +39,7 @@ curl -fsSL https://deno.land/x/dftps/install.sh | sh
 curl -fsSL https://deno.land/x/dftps/install.sh | sh -s v1.0.0
 ```
 
-* * *
+---
 
 ## Make your own
 
@@ -40,26 +48,25 @@ curl -fsSL https://deno.land/x/dftps/install.sh | sh -s v1.0.0
 - First, we import the Server class and type for user authentication.
 
 ```ts
-import { Server } from "https://deno.land/x/dftps/server/mod.ts";
-import type { UsernameResolvable, LoginResolvable } from "https://deno.land/x/dftps/server/connection.ts";
+import { Server } from "jsr:@dftps/server";
+import type { LoginResolvable, UsernameResolvable } from "jsr:@dftps/server";
 ```
 
 - Then we just need to create an instance of Server with these options described below.
-  - [Listener Options](https://doc.deno.land/https/deno.land%2Fx%2Fdftps%2Fsrc%2Fserver%2Fmod.ts#FTPOptions)
-  - [FTPServer Options](https://doc.deno.land/https/deno.land%2Fx%2Fdftps%2Fsrc%2Fserver%2Fmod.ts#FTPServerOptions)
 
 ```ts
 const serve = new Server({ port: 21, hostname: "127.0.0.1" });
 ```
 
-- All we have to do is wait for a new connection and check the veracity of it using the authentication tools (awaitUsername, awaitLogin).
+- All we have to do is wait for a new connection and check the veracity of it using the authentication tools
+  (awaitUsername, awaitLogin).
 
 ```ts
 for await (const connection of serve) {
   const { awaitUsername, awaitLogin } = connection;
   /** waiting to receiving username from connection */
   awaitUsername.then(({ username, resolveUsername }: UsernameResolvable) => {
-    if (!username !== "my-username") return resolveUsername.reject("Incorrect username!");
+    if (username !== "my-username") return resolveUsername.reject("Incorrect username!");
     resolveUsername.resolve();
   });
   /** waiting to receiving password from connection and finalize the user authenticate */
@@ -72,54 +79,41 @@ for await (const connection of serve) {
 
 ### With database
 
-- To begin we will initially import the "createDb" function which will allow us to create a database and the "Users" model in addition to the imports mentioned above.
+- Import the database utilities and the Users repository:
 
   ```ts
-  import { verify, Model } from "https://deno.land/x/dftps/deps.ts";
-  import createDb from "https://deno.land/x/dftps/src/db/mod.ts";
-  import Users from "https://deno.land/x/dftps/src/db/Users.ts";
+  import { Server, verify } from "jsr:@dftps/server";
+  import { createDb, type User, Users } from "jsr:@dftps/server/db";
   ```
 
-- Only the following database types are supported: "MariaDB" | "MongoDB" | "MySQL" | "PostgreSQL" | "SQLite"
-  - Maria, MySQL, PostgreSQL Options
-    - database [string] (Required)
-    - host [string] (Required)
-    - username [string] (Required)
-    - password [string] (Required)
-    - port [number] (Optional)
-  - MongoDB Options
-    - uri [string] (Required)
-    - database [string] (Required)
+- Database configuration (SQLite):
   - SQLite Options
-    - filepath [string] (Required)
+    - filepath [string] (Required) - Path to the SQLite database file
 
 ```ts
-/** Example with MongoDB */
-await createDb({
-  connector: "MongoDB",
-  uri: 'mongodb://127.0.0.1:27017',
-  database: 'test'
-});
+/** Initialize SQLite database */
+const db = createDb({ connector: "SQLite", filepath: "./data/dftps.db" });
 
 const serve = new Server(ListenOptions, FTPServerOptions);
 
 for await (const connection of serve) {
   const { awaitUsername, awaitLogin } = connection;
-  let user: Model;
+  let user: User | undefined;
+
   /** Waiting to receiving username from connection */
-  awaitUsername.then(({ username, resolveUsername }: UsernameResolvable) => {
+  awaitUsername.then(async ({ username, resolveUsername }: UsernameResolvable) => {
     /** Find user in database */
-    const found = await Users.where('username', username).get();
-    if ((found instanceof Array && found.length === 0) || !found) return resolveUsername.reject("Incorrect username!");
-    user = (found instanceof Array) ? found[0] : found;
+    user = await Users.findByUsername(username);
+    if (!user) return resolveUsername.reject("Incorrect username!");
     resolveUsername.resolve();
   });
+
   /** Waiting to receiving password from connection and finalize the user authenticate */
   awaitLogin.then(async ({ password, resolvePassword }: LoginResolvable) => {
     if (!user) return resolvePassword.reject("User not found!");
-    if (! await verify(password, (user.password as string))) return resolvePassword.reject("Wrong password!");
+    if (!await verify(user.password, password)) return resolvePassword.reject("Wrong password!");
     const { root, uid, gid } = user;
-    resolvePassword.resolve({ root: (root as string), uid: (uid as number), gid: (gid as number) });
+    resolvePassword.resolve({ root, uid, gid });
   });
 }
 ```
@@ -128,25 +122,33 @@ for await (const connection of serve) {
 
 ![output_example](./assets/example_log.gif)
 
-* * *
+---
 
 ## Deno Dependencies
 
-- ### [Deno](https://deno.land)
+All dependencies are now available via [JSR](https://jsr.io) with modern Deno 2.x compatibility:
 
-  - [async](https://deno.land/std@0.95.0/async)
-  - [io](https://deno.land/std@0.95.0/io)
-  - [path](https://deno.land/std@0.95.0/path)
-  - [fs](https://deno.land/std@0.95.0/fs)
-  - [datetime](https://deno.land/std@0.96.0/datetime)
+- ### Standard Library (JSR)
 
-- ### [getport](https://deno.land/x/getport)
+  - [@std/async](https://jsr.io/@std/async) - Async utilities
+  - [@std/path](https://jsr.io/@std/path) - Path manipulation
+  - [@std/fs](https://jsr.io/@std/fs) - File system operations
+  - [@std/datetime](https://jsr.io/@std/datetime) - Date/time formatting
+  - [@std/assert](https://jsr.io/@std/assert) - Assertions
 
-- ### [cliffy](https://deno.land/x/cliffy)
+- ### CLI Framework
 
-- ### [scrypt](https://deno.land/x/scrypt)
+  - [@cliffy/command](https://jsr.io/@cliffy/command) - CLI commands
+  - [@cliffy/table](https://jsr.io/@cliffy/table) - Table formatting
+  - [@cliffy/ansi](https://jsr.io/@cliffy/ansi) - ANSI colors
 
-- ### [denodb](https://deno.land/x/denodb)
+- ### Database
+
+  - [@db/sqlite](https://jsr.io/@db/sqlite) - Native SQLite for Deno
+
+- ### Security
+
+  - [@node-rs/argon2](https://www.npmjs.com/package/@node-rs/argon2) - Password hashing
 
 ## [List of FTP commands](https://en.wikipedia.org/wiki/List_of_FTP_commands)
 

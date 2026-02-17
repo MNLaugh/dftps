@@ -1,0 +1,82 @@
+{
+  "scriptId": "395",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/server/commands/PORT.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 1212,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 85,
+          "endOffset": 338,
+          "count": 2
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<static_initializer>",
+      "ranges": [
+        {
+          "startOffset": 101,
+          "endOffset": 291,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Port",
+      "ranges": [
+        {
+          "startOffset": 342,
+          "endOffset": 552,
+          "count": 2
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "handler",
+      "ranges": [
+        {
+          "startOffset": 555,
+          "endOffset": 1209,
+          "count": 2
+        },
+        {
+          "startOffset": 610,
+          "endOffset": 850,
+          "count": 1
+        },
+        {
+          "startOffset": 850,
+          "endOffset": 1205,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 956,
+          "endOffset": 972,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    }
+  ]
+}

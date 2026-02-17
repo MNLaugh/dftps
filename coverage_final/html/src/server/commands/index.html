@@ -1,0 +1,1088 @@
+<!doctype html>
+      <html lang='en-US'>
+        
+      <head>
+        <meta charset='utf-8'>
+        <title>Coverage report for src/server/commands/</title>
+        <style>/* Copyright 2015 the Istanbul contributors. All rights reserved. ISC license. */
+/* Copyright 2018-2023 the Deno authors. All rights reserved. MIT license. */
+
+.light {
+  /* forces light color-scheme */
+  color-scheme: light;
+}
+.dark {
+  /* forces dark color-scheme */
+  color-scheme: dark;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+body {
+  font-family:
+    Helvetica Neue,
+    Helvetica,
+    Arial;
+  font-size: 14px;
+  color: light-dark(#333, #ddd);
+  background-color: light-dark(white, #111);
+}
+.small {
+  font-size: 12px;
+}
+*,
+*:after,
+*:before {
+  box-sizing: border-box;
+}
+h1 {
+  font-size: 20px;
+  margin: 0;
+}
+h2 {
+  font-size: 14px;
+}
+pre {
+  font:
+    12px/1.4 Consolas,
+    "Liberation Mono",
+    Menlo,
+    Courier,
+    monospace;
+  margin: 0;
+  padding: 0;
+  tab-size: 2;
+}
+a {
+  color: light-dark(#0074d9, #3ba3ff);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+.strong {
+  font-weight: bold;
+}
+.space-top1 {
+  padding: 10px 0 0 0;
+}
+.pad2y {
+  padding: 20px 0;
+}
+.pad1y {
+  padding: 10px 0;
+}
+.pad2x {
+  padding: 0 20px;
+}
+.pad2 {
+  padding: 20px;
+}
+.pad1 {
+  padding: 10px;
+}
+.space-left2 {
+  padding-left: 55px;
+}
+.space-right2 {
+  padding-right: 20px;
+}
+.center {
+  text-align: center;
+}
+.clearfix {
+  display: block;
+}
+.clearfix:after {
+  content: "";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+.fl {
+  float: left;
+}
+@media only screen and (max-width: 640px) {
+  .col3 {
+    width: 100%;
+    max-width: 100%;
+  }
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+.quiet {
+  color: light-dark(rgb(0 0 0 / 0.5), rgb(255 255 255 / 0.5));
+}
+.quiet a {
+  opacity: 0.7;
+}
+
+.fraction {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 10px;
+  color: light-dark(#555, #bbb);
+  background: light-dark(#e8e8e8, #171717);
+  padding: 4px 5px;
+  border-radius: 3px;
+  vertical-align: middle;
+}
+
+div.path a:link,
+div.path a:visited {
+  color: light-dark(#333, #ddd);
+}
+table.coverage {
+  border-collapse: collapse;
+  margin: 10px 0 0 0;
+  padding: 0;
+}
+
+table.coverage td {
+  margin: 0;
+  padding: 0;
+  vertical-align: top;
+}
+table.coverage td.line-count {
+  text-align: right;
+  padding: 0 5px 0 20px;
+}
+table.coverage td.line-coverage {
+  text-align: right;
+  padding-right: 4px;
+  min-width: 20px;
+}
+
+table.coverage td.branch-coverage {
+  text-align: right;
+  padding-right: 3px;
+  min-width: 8px;
+}
+
+table.coverage td span.cline-any {
+  display: inline-block;
+  padding: 0 5px;
+  width: 100%;
+}
+.missing-if-branch {
+  display: inline-block;
+  margin-right: 5px;
+  border-radius: 3px;
+  position: relative;
+  padding: 0 4px;
+  background: light-dark(#333, #ddd);
+  color: light-dark(yellow, #717108);
+}
+
+.skip-if-branch {
+  display: none;
+  margin-right: 10px;
+  position: relative;
+  padding: 0 4px;
+  background: light-dark(#ccc, #333);
+  color: light-dark(white, black);
+}
+.missing-if-branch .typ,
+.skip-if-branch .typ {
+  color: inherit !important;
+}
+.coverage-summary {
+  border-collapse: collapse;
+  width: 100%;
+}
+.coverage-summary tr {
+  border-bottom: 1px solid light-dark(#bbb, #7E7E7E);
+}
+.keyline-all {
+  border: 1px solid light-dark(#ddd, #7E7E7E);
+}
+.coverage-summary td,
+.coverage-summary th {
+  padding: 10px;
+}
+.coverage-summary tbody {
+  border: 1px solid light-dark(#bbb, #7E7E7E);
+}
+.coverage-summary td {
+  border-right: 1px solid light-dark(#bbb, #7E7E7E);
+}
+.coverage-summary td:last-child {
+  border-right: none;
+}
+.coverage-summary th {
+  text-align: left;
+  font-weight: normal;
+  white-space: nowrap;
+}
+.coverage-summary th.file {
+  border-right: none !important;
+}
+.coverage-summary th.pic,
+.coverage-summary th.abs,
+.coverage-summary td.pct,
+.coverage-summary td.abs {
+  text-align: right;
+}
+.coverage-summary td.file {
+  white-space: nowrap;
+}
+.coverage-summary td.pic {
+  min-width: 120px !important;
+}
+
+.coverage-summary .sorter {
+  height: 10px;
+  width: 7px;
+  display: inline-block;
+  margin-left: 0.5em;
+  background: url(sort-arrow-sprite.png) no-repeat scroll 0 0 transparent;
+}
+.coverage-summary .sorted .sorter {
+  background-position: 0 -20px;
+}
+.coverage-summary .sorted-desc .sorter {
+  background-position: 0 -10px;
+}
+.status-line {
+  height: 10px;
+}
+/* yellow */
+.cbranch-no {
+  background: light-dark(yellow, #cc0) !important;
+  color: #111;
+}
+/* dark red */
+.red.solid,
+.status-line.low,
+.low .cover-fill {
+  background: light-dark(#c21f39, #a5162e);
+}
+.low .chart {
+  border: 1px solid light-dark(#c21f39, #a5162e);
+}
+.highlighted,
+.highlighted .cstat-no,
+.highlighted .fstat-no,
+.highlighted .cbranch-no {
+  background: light-dark(#c21f39, #a5162e) !important;
+}
+/* medium red */
+.cstat-no,
+.fstat-no,
+.cbranch-no,
+.cbranch-no {
+  background: light-dark(#f6c6ce, #553339);
+}
+/* light red */
+.low,
+.cline-no {
+  background: light-dark(#fce1e5, #2e2023);
+}
+/* light green */
+.high,
+.cline-yes {
+  background: light-dark(#e6f5d0, #25291f);
+}
+/* medium green */
+.cstat-yes {
+  background: light-dark(#a1d76a, #293b18);
+}
+/* dark green */
+.status-line.high,
+.high .cover-fill {
+  background: light-dark(#4d9221, #2a5211);
+}
+.high .chart {
+  border: 1px solid light-dark(#4d9221, #2a5211);
+}
+/* dark yellow (gold) */
+.status-line.medium,
+.medium .cover-fill {
+  background: light-dark(#f9cd0b, #b09107);
+}
+.medium .chart {
+  border: 1px solid light-dark(#f9cd0b, #b09107);
+}
+/* light yellow */
+.medium {
+  background: light-dark(#fff4c2, #4a432a);
+}
+
+.cstat-skip {
+  background: light-dark(#ddd, #222);
+  color: light-dark(#111, #eee);
+}
+.fstat-skip {
+  background: light-dark(#ddd, #222);
+  color: light-dark(#111, #eee) !important;
+}
+.cbranch-skip {
+  background: light-dark(#ddd, #222) !important;
+  color: light-dark(#111, #eee);
+}
+
+span.cline-neutral {
+  background: light-dark(#eaeaea, #141414);
+}
+
+.coverage-summary td.empty {
+  opacity: 0.5;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  line-height: 1;
+  color: light-dark(#888, #999);
+}
+
+.cover-fill,
+.cover-empty {
+  display: inline-block;
+  height: 12px;
+}
+.chart {
+  line-height: 0;
+}
+.cover-empty {
+  background: light-dark(white, black);
+}
+.cover-full {
+  border-right: none !important;
+}
+pre.prettyprint {
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.com {
+  color: light-dark(#999, #666) !important;
+}
+.ignore-none {
+  color: light-dark(#999, #666);
+  font-weight: normal;
+}
+
+.wrapper {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -48px;
+}
+.footer,
+.push {
+  height: 48px;
+}
+.overflow-auto {
+  overflow: auto;
+}
+.flex-header {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#theme-toggle {
+  border: none;
+  padding: 6px;
+  border-radius: 4px;
+}
+#theme-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+</style>
+        <script>// Copyright 2018-2026 the Deno authors. MIT license.
+
+function setTheme(theme, themeToggle) {
+  if (theme === "dark") {
+    document.documentElement.classList.add("dark");
+    document.documentElement.classList.remove("light");
+    localStorage.setItem("deno-coverage-theme", "dark");
+  } else {
+    document.documentElement.classList.add("light");
+    document.documentElement.classList.remove("dark");
+    localStorage.setItem("deno-coverage-theme", "light");
+  }
+
+  const darkIcon = themeToggle.children[0];
+  const lightIcon = themeToggle.children[1];
+
+  if (theme === "dark") {
+    darkIcon.style.display = "none";
+    lightIcon.style.display = "block";
+  } else {
+    darkIcon.style.display = "block";
+    lightIcon.style.display = "none";
+  }
+}
+
+window.addEventListener("load", () => {
+  const themeToggle = document.getElementById("theme-toggle");
+  themeToggle.removeAttribute("style");
+
+  const storedTheme = localStorage.getItem("deno-coverage-theme");
+  const systemPrefersDark =
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  if (storedTheme) {
+    setTheme(storedTheme, themeToggle);
+  } else {
+    setTheme(systemPrefersDark ? "dark" : "light", themeToggle);
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      setTheme(isDark ? "light" : "dark", themeToggle);
+    });
+  }
+});
+
+// prevent flash
+const theme = localStorage.getItem("deno-coverage-theme") ||
+  (window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light");
+document.documentElement.classList.add(theme);
+</script>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+      </head>
+        <body>
+          <div class='wrapper'>
+            
+      <div class='pad1 flex-header'>
+        <div>
+          <h1><a href='../../../index.html'>All files</a> / <a href='../../index.html'>src</a> / <a href='../index.html'>server</a> / commands</h1>
+          <div class='clearfix'>
+            <div class='fl pad1y space-right2'>
+              <span class='strong'>60.43%</span>
+              <span class='quiet'>Branches</span>
+              <span class='fraction'>113/187</span>
+            </div>
+            <div class='fl pad1y space-right2'>
+              <span class='strong'>73.07%</span>
+              <span class='quiet'>Lines</span>
+              <span class='fraction'>871/1192</span>
+            </div>
+          </div>
+        </div>
+        <button id="theme-toggle" type="button" aria-label="Toggle dark mode" style="display: none;">
+          <svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="14"
+  height="14"
+  viewBox="0 0 24 24"
+  fill="currentColor"
+>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path
+    d="M12 1.992a10 10 0 1 0 9.236 13.838c.341 -.82 -.476 -1.644 -1.298 -1.31a6.5 6.5 0 0 1 -6.864 -10.787l.077 -.08c.551 -.63 .113 -1.653 -.758 -1.653h-.266l-.068 -.006l-.06 -.002z"
+  />
+</svg>
+
+          <svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="14"
+  height="14"
+  viewBox="0 0 24 24"
+  fill="currentColor"
+  style="display: none;"
+>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path
+    d="M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z"
+  />
+  <path
+    d="M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z"
+  />
+  <path
+    d="M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z"
+  />
+  <path
+    d="M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z"
+  />
+  <path
+    d="M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z"
+  />
+  <path
+    d="M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z"
+  />
+  <path
+    d="M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z"
+  />
+  <path
+    d="M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z"
+  />
+  <path
+    d="M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z"
+  />
+</svg>
+
+        </button>
+      </div>
+      <div class='status-line medium'></div>
+            <div class='pad1 overflow-auto'>
+              
+      <table class='coverage-summary'>
+        <thead>
+          <tr>
+            <th class='file'>File</th>
+            <th class='pic'></th>
+            <th class='pct'>Branches</th>
+            <th class='abs'></th>
+            <th class='pct'>Lines</th>
+            <th class='abs'></th>
+          </tr>
+        </thead>
+        <tbody>
+          
+      <tr>
+        <td class='file medium'><a href='ABOR.ts.html'>ABOR.ts</a></td>
+        <td class='pic medium'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 62.5%'></div><div class='cover-empty' style='width: calc(100% - 62.5%)'></div>
+          </div>
+        </td>
+        <td class='pct low'>0.00%</td>
+        <td class='abs low'>0/3</td>
+        <td class='pct medium'>62.50%</td>
+        <td class='abs medium'>15/24</td>
+      </tr>
+
+      <tr>
+        <td class='file high'><a href='ALLO.ts.html'>ALLO.ts</a></td>
+        <td class='pic high'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 100.0%'></div><div class='cover-empty' style='width: calc(100% - 100.0%)'></div>
+          </div>
+        </td>
+        <td class='pct high'>100.00%</td>
+        <td class='abs high'>0/0</td>
+        <td class='pct high'>100.00%</td>
+        <td class='abs high'>14/14</td>
+      </tr>
+
+      <tr>
+        <td class='file high'><a href='APPE.ts.html'>APPE.ts</a></td>
+        <td class='pic high'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 84.2%'></div><div class='cover-empty' style='width: calc(100% - 84.2%)'></div>
+          </div>
+        </td>
+        <td class='pct low'>0.00%</td>
+        <td class='abs low'>0/1</td>
+        <td class='pct high'>84.21%</td>
+        <td class='abs high'>16/19</td>
+      </tr>
+
+      <tr>
+        <td class='file medium'><a href='AUTH.ts.html'>AUTH.ts</a></td>
+        <td class='pic medium'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 57.9%'></div><div class='cover-empty' style='width: calc(100% - 57.9%)'></div>
+          </div>
+        </td>
+        <td class='pct medium'>66.67%</td>
+        <td class='abs medium'>2/3</td>
+        <td class='pct medium'>57.89%</td>
+        <td class='abs medium'>22/38</td>
+      </tr>
+
+      <tr>
+        <td class='file high'><a href='CDUP.ts.html'>CDUP.ts</a></td>
+        <td class='pic high'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 85.0%'></div><div class='cover-empty' style='width: calc(100% - 85.0%)'></div>
+          </div>
+        </td>
+        <td class='pct low'>0.00%</td>
+        <td class='abs low'>0/1</td>
+        <td class='pct high'>85.00%</td>
+        <td class='abs high'>17/20</td>
+      </tr>
+
+      <tr>
+        <td class='file medium'><a href='CLNT.ts.html'>CLNT.ts</a></td>
+        <td class='pic medium'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 75.0%'></div><div class='cover-empty' style='width: calc(100% - 75.0%)'></div>
+          </div>
+        </td>
+        <td class='pct low'>0.00%</td>
+        <td class='abs low'>0/2</td>
+        <td class='pct medium'>75.00%</td>
+        <td class='abs medium'>18/24</td>
+      </tr>
+
+      <tr>
+        <td class='file medium'><a href='CWD.ts.html'>CWD.ts</a></td>
+        <td class='pic medium'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 75.0%'></div><div class='cover-empty' style='width: calc(100% - 75.0%)'></div>
+          </div>
+        </td>
+        <td class='pct medium'>71.43%</td>
+        <td class='abs medium'>5/7</td>
+        <td class='pct medium'>75.00%</td>
+        <td class='abs medium'>18/24</td>
+      </tr>
+
+      <tr>
+        <td class='file medium'><a href='DELE.ts.html'>DELE.ts</a></td>
+        <td class='pic medium'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 75.0%'></div><div class='cover-empty' style='width: calc(100% - 75.0%)'></div>
+          </div>
+        </td>
+        <td class='pct medium'>66.67%</td>
+        <td class='abs medium'>4/6</td>
+        <td class='pct medium'>75.00%</td>
+        <td class='abs medium'>18/24</td>
+      </tr>
+
+      <tr>
+        <td class='file medium'><a href='EPRT.ts.html'>EPRT.ts</a></td>
+        <td class='pic medium'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 64.0%'></div><div class='cover-empty' style='width: calc(100% - 64.0%)'></div>
+          </div>
+        </td>
+        <td class='pct low'>0.00%</td>
+        <td class='abs low'>0/1</td>
+        <td class='pct medium'>64.00%</td>
+        <td class='abs medium'>16/25</td>
+      </tr>
+
+      <tr>
+        <td class='file low'><a href='EPSV.ts.html'>EPSV.ts</a></td>
+        <td class='pic low'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 13.0%'></div><div class='cover-empty' style='width: calc(100% - 13.0%)'></div>
+          </div>
+        </td>
+        <td class='pct high'>100.00%</td>
+        <td class='abs high'>0/0</td>
+        <td class='pct low'>13.04%</td>
+        <td class='abs low'>3/23</td>
+      </tr>
+
+      <tr>
+        <td class='file high'><a href='FEAT.ts.html'>FEAT.ts</a></td>
+        <td class='pic high'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 90.6%'></div><div class='cover-empty' style='width: calc(100% - 90.6%)'></div>
+          </div>
+        </td>
+        <td class='pct medium'>66.67%</td>
+        <td class='abs medium'>2/3</td>
+        <td class='pct high'>90.62%</td>
+        <td class='abs high'>29/32</td>
+      </tr>
+
+      <tr>
+        <td class='file medium'><a href='LIST.ts.html'>LIST.ts</a></td>
+        <td class='pic medium'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 67.9%'></div><div class='cover-empty' style='width: calc(100% - 67.9%)'></div>
+          </div>
+        </td>
+        <td class='pct low'>43.75%</td>
+        <td class='abs low'>7/16</td>
+        <td class='pct medium'>67.92%</td>
+        <td class='abs medium'>36/53</td>
+      </tr>
+
+      <tr>
+        <td class='file medium'><a href='MDTM.ts.html'>MDTM.ts</a></td>
+        <td class='pic medium'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 75.9%'></div><div class='cover-empty' style='width: calc(100% - 75.9%)'></div>
+          </div>
+        </td>
+        <td class='pct medium'>62.50%</td>
+        <td class='abs medium'>5/8</td>
+        <td class='pct medium'>75.86%</td>
+        <td class='abs medium'>22/29</td>
+      </tr>
+
+      <tr>
+        <td class='file medium'><a href='MFMT.ts.html'>MFMT.ts</a></td>
+        <td class='pic medium'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 67.3%'></div><div class='cover-empty' style='width: calc(100% - 67.3%)'></div>
+          </div>
+        </td>
+        <td class='pct medium'>60.00%</td>
+        <td class='abs medium'>6/10</td>
+        <td class='pct medium'>67.31%</td>
+        <td class='abs medium'>35/52</td>
+      </tr>
+
+      <tr>
+        <td class='file medium'><a href='MKD.ts.html'>MKD.ts</a></td>
+        <td class='pic medium'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 72.0%'></div><div class='cover-empty' style='width: calc(100% - 72.0%)'></div>
+          </div>
+        </td>
+        <td class='pct medium'>66.67%</td>
+        <td class='abs medium'>4/6</td>
+        <td class='pct medium'>72.00%</td>
+        <td class='abs medium'>18/25</td>
+      </tr>
+
+      <tr>
+        <td class='file low'><a href='MLSD.ts.html'>MLSD.ts</a></td>
+        <td class='pic low'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 47.2%'></div><div class='cover-empty' style='width: calc(100% - 47.2%)'></div>
+          </div>
+        </td>
+        <td class='pct low'>37.50%</td>
+        <td class='abs low'>3/8</td>
+        <td class='pct low'>47.17%</td>
+        <td class='abs low'>25/53</td>
+      </tr>
+
+      <tr>
+        <td class='file medium'><a href='MLST.ts.html'>MLST.ts</a></td>
+        <td class='pic medium'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 70.0%'></div><div class='cover-empty' style='width: calc(100% - 70.0%)'></div>
+          </div>
+        </td>
+        <td class='pct medium'>62.50%</td>
+        <td class='abs medium'>5/8</td>
+        <td class='pct medium'>70.00%</td>
+        <td class='abs medium'>28/40</td>
+      </tr>
+
+      <tr>
+        <td class='file high'><a href='MODE.ts.html'>MODE.ts</a></td>
+        <td class='pic high'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 100.0%'></div><div class='cover-empty' style='width: calc(100% - 100.0%)'></div>
+          </div>
+        </td>
+        <td class='pct high'>100.00%</td>
+        <td class='abs high'>2/2</td>
+        <td class='pct high'>100.00%</td>
+        <td class='abs high'>14/14</td>
+      </tr>
+
+      <tr>
+        <td class='file high'><a href='NLST.ts.html'>NLST.ts</a></td>
+        <td class='pic high'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 84.2%'></div><div class='cover-empty' style='width: calc(100% - 84.2%)'></div>
+          </div>
+        </td>
+        <td class='pct low'>0.00%</td>
+        <td class='abs low'>0/1</td>
+        <td class='pct high'>84.21%</td>
+        <td class='abs high'>16/19</td>
+      </tr>
+
+      <tr>
+        <td class='file high'><a href='NOOP.ts.html'>NOOP.ts</a></td>
+        <td class='pic high'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 100.0%'></div><div class='cover-empty' style='width: calc(100% - 100.0%)'></div>
+          </div>
+        </td>
+        <td class='pct high'>100.00%</td>
+        <td class='abs high'>0/0</td>
+        <td class='pct high'>100.00%</td>
+        <td class='abs high'>14/14</td>
+      </tr>
+
+      <tr>
+        <td class='file high'><a href='OPTS.ts.html'>OPTS.ts</a></td>
+        <td class='pic high'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 81.8%'></div><div class='cover-empty' style='width: calc(100% - 81.8%)'></div>
+          </div>
+        </td>
+        <td class='pct low'>42.86%</td>
+        <td class='abs low'>3/7</td>
+        <td class='pct high'>81.82%</td>
+        <td class='abs high'>27/33</td>
+      </tr>
+
+      <tr>
+        <td class='file high'><a href='PASS.ts.html'>PASS.ts</a></td>
+        <td class='pic high'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 80.8%'></div><div class='cover-empty' style='width: calc(100% - 80.8%)'></div>
+          </div>
+        </td>
+        <td class='pct high'>83.33%</td>
+        <td class='abs high'>5/6</td>
+        <td class='pct high'>80.77%</td>
+        <td class='abs high'>21/26</td>
+      </tr>
+
+      <tr>
+        <td class='file low'><a href='PASV.ts.html'>PASV.ts</a></td>
+        <td class='pic low'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 48.0%'></div><div class='cover-empty' style='width: calc(100% - 48.0%)'></div>
+          </div>
+        </td>
+        <td class='pct high'>100.00%</td>
+        <td class='abs high'>0/0</td>
+        <td class='pct low'>48.00%</td>
+        <td class='abs low'>12/25</td>
+      </tr>
+
+      <tr>
+        <td class='file high'><a href='PBSZ.ts.html'>PBSZ.ts</a></td>
+        <td class='pic high'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 90.0%'></div><div class='cover-empty' style='width: calc(100% - 90.0%)'></div>
+          </div>
+        </td>
+        <td class='pct medium'>50.00%</td>
+        <td class='abs medium'>2/4</td>
+        <td class='pct high'>90.00%</td>
+        <td class='abs high'>18/20</td>
+      </tr>
+
+      <tr>
+        <td class='file medium'><a href='PORT.ts.html'>PORT.ts</a></td>
+        <td class='pic medium'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 65.5%'></div><div class='cover-empty' style='width: calc(100% - 65.5%)'></div>
+          </div>
+        </td>
+        <td class='pct medium'>50.00%</td>
+        <td class='abs medium'>1/2</td>
+        <td class='pct medium'>65.52%</td>
+        <td class='abs medium'>19/29</td>
+      </tr>
+
+      <tr>
+        <td class='file medium'><a href='PROT.ts.html'>PROT.ts</a></td>
+        <td class='pic medium'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 75.9%'></div><div class='cover-empty' style='width: calc(100% - 75.9%)'></div>
+          </div>
+        </td>
+        <td class='pct medium'>50.00%</td>
+        <td class='abs medium'>5/10</td>
+        <td class='pct medium'>75.86%</td>
+        <td class='abs medium'>22/29</td>
+      </tr>
+
+      <tr>
+        <td class='file medium'><a href='PWD.ts.html'>PWD.ts</a></td>
+        <td class='pic medium'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 76.0%'></div><div class='cover-empty' style='width: calc(100% - 76.0%)'></div>
+          </div>
+        </td>
+        <td class='pct medium'>60.00%</td>
+        <td class='abs medium'>3/5</td>
+        <td class='pct medium'>76.00%</td>
+        <td class='abs medium'>19/25</td>
+      </tr>
+
+      <tr>
+        <td class='file high'><a href='QUIT.ts.html'>QUIT.ts</a></td>
+        <td class='pic high'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 83.3%'></div><div class='cover-empty' style='width: calc(100% - 83.3%)'></div>
+          </div>
+        </td>
+        <td class='pct low'>0.00%</td>
+        <td class='abs low'>0/1</td>
+        <td class='pct high'>83.33%</td>
+        <td class='abs high'>15/18</td>
+      </tr>
+
+      <tr>
+        <td class='file high'><a href='REST.ts.html'>REST.ts</a></td>
+        <td class='pic high'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 100.0%'></div><div class='cover-empty' style='width: calc(100% - 100.0%)'></div>
+          </div>
+        </td>
+        <td class='pct high'>100.00%</td>
+        <td class='abs high'>3/3</td>
+        <td class='pct high'>100.00%</td>
+        <td class='abs high'>19/19</td>
+      </tr>
+
+      <tr>
+        <td class='file medium'><a href='RETR.ts.html'>RETR.ts</a></td>
+        <td class='pic medium'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 53.1%'></div><div class='cover-empty' style='width: calc(100% - 53.1%)'></div>
+          </div>
+        </td>
+        <td class='pct medium'>66.67%</td>
+        <td class='abs medium'>4/6</td>
+        <td class='pct medium'>53.12%</td>
+        <td class='abs medium'>17/32</td>
+      </tr>
+
+      <tr>
+        <td class='file high'><a href='RMD.ts.html'>RMD.ts</a></td>
+        <td class='pic high'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 84.2%'></div><div class='cover-empty' style='width: calc(100% - 84.2%)'></div>
+          </div>
+        </td>
+        <td class='pct low'>0.00%</td>
+        <td class='abs low'>0/1</td>
+        <td class='pct high'>84.21%</td>
+        <td class='abs high'>16/19</td>
+      </tr>
+
+      <tr>
+        <td class='file medium'><a href='RNFR.ts.html'>RNFR.ts</a></td>
+        <td class='pic medium'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 76.0%'></div><div class='cover-empty' style='width: calc(100% - 76.0%)'></div>
+          </div>
+        </td>
+        <td class='pct medium'>66.67%</td>
+        <td class='abs medium'>4/6</td>
+        <td class='pct medium'>76.00%</td>
+        <td class='abs medium'>19/25</td>
+      </tr>
+
+      <tr>
+        <td class='file medium'><a href='RNTO.ts.html'>RNTO.ts</a></td>
+        <td class='pic medium'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 75.0%'></div><div class='cover-empty' style='width: calc(100% - 75.0%)'></div>
+          </div>
+        </td>
+        <td class='pct medium'>71.43%</td>
+        <td class='abs medium'>5/7</td>
+        <td class='pct medium'>75.00%</td>
+        <td class='abs medium'>18/24</td>
+      </tr>
+
+      <tr>
+        <td class='file medium'><a href='SITE.ts.html'>SITE.ts</a></td>
+        <td class='pic medium'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 50.0%'></div><div class='cover-empty' style='width: calc(100% - 50.0%)'></div>
+          </div>
+        </td>
+        <td class='pct low'>0.00%</td>
+        <td class='abs low'>0/3</td>
+        <td class='pct medium'>50.00%</td>
+        <td class='abs medium'>16/32</td>
+      </tr>
+
+      <tr>
+        <td class='file low'><a href='STAT.ts.html'>STAT.ts</a></td>
+        <td class='pic low'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 45.9%'></div><div class='cover-empty' style='width: calc(100% - 45.9%)'></div>
+          </div>
+        </td>
+        <td class='pct medium'>50.00%</td>
+        <td class='abs medium'>2/4</td>
+        <td class='pct low'>45.95%</td>
+        <td class='abs low'>17/37</td>
+      </tr>
+
+      <tr>
+        <td class='file low'><a href='STOR.ts.html'>STOR.ts</a></td>
+        <td class='pic low'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 39.5%'></div><div class='cover-empty' style='width: calc(100% - 39.5%)'></div>
+          </div>
+        </td>
+        <td class='pct medium'>50.00%</td>
+        <td class='abs medium'>3/6</td>
+        <td class='pct low'>39.53%</td>
+        <td class='abs low'>17/43</td>
+      </tr>
+
+      <tr>
+        <td class='file high'><a href='STRU.ts.html'>STRU.ts</a></td>
+        <td class='pic high'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 93.3%'></div><div class='cover-empty' style='width: calc(100% - 93.3%)'></div>
+          </div>
+        </td>
+        <td class='pct medium'>66.67%</td>
+        <td class='abs medium'>2/3</td>
+        <td class='pct high'>93.33%</td>
+        <td class='abs high'>14/15</td>
+      </tr>
+
+      <tr>
+        <td class='file high'><a href='SYST.ts.html'>SYST.ts</a></td>
+        <td class='pic high'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 100.0%'></div><div class='cover-empty' style='width: calc(100% - 100.0%)'></div>
+          </div>
+        </td>
+        <td class='pct high'>100.00%</td>
+        <td class='abs high'>0/0</td>
+        <td class='pct high'>100.00%</td>
+        <td class='abs high'>16/16</td>
+      </tr>
+
+      <tr>
+        <td class='file high'><a href='TYPE.ts.html'>TYPE.ts</a></td>
+        <td class='pic high'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 100.0%'></div><div class='cover-empty' style='width: calc(100% - 100.0%)'></div>
+          </div>
+        </td>
+        <td class='pct high'>100.00%</td>
+        <td class='abs high'>8/8</td>
+        <td class='pct high'>100.00%</td>
+        <td class='abs high'>24/24</td>
+      </tr>
+
+      <tr>
+        <td class='file high'><a href='USER.ts.html'>USER.ts</a></td>
+        <td class='pic high'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 84.6%'></div><div class='cover-empty' style='width: calc(100% - 84.6%)'></div>
+          </div>
+        </td>
+        <td class='pct high'>90.00%</td>
+        <td class='abs high'>9/10</td>
+        <td class='pct high'>84.62%</td>
+        <td class='abs high'>22/26</td>
+      </tr>
+
+      <tr>
+        <td class='file high'><a href='_REGISTRY.ts.html'>_REGISTRY.ts</a></td>
+        <td class='pic high'>
+          <div class='chart'>
+            <div class='cover-fill' style='width: 100.0%'></div><div class='cover-empty' style='width: calc(100% - 100.0%)'></div>
+          </div>
+        </td>
+        <td class='pct high'>100.00%</td>
+        <td class='abs high'>9/9</td>
+        <td class='pct high'>100.00%</td>
+        <td class='abs high'>109/109</td>
+      </tr>
+        </tbody>
+      </table>
+            </div>
+            <div class='push'></div>
+          </div>
+          
+      <div class='footer quiet pad2 space-top1 center small'>
+        Code coverage generated by
+        <a href='https://deno.com/' target='_blank'>Deno v2.6.9</a>
+        at Tue, 17 Feb 2026 10:16:36 +0000
+      </div>
+        </body>
+      </html>

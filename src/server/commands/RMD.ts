@@ -3,10 +3,10 @@ import type { CommandData } from "./_REGISTRY.ts";
 import Dele from "./DELE.ts";
 
 export default class Cdup {
-  static directive = ['RMD', 'XRMD'];
-  static syntax = '{{cmd}} <path>';
-  static description = 'Remove a directory';
-  static flags = {}
+  static directive = ["RMD", "XRMD"];
+  static syntax = "{{cmd}} <path>";
+  static description = "Remove a directory";
+  static flags = {};
 
   description = Cdup.description;
   syntax = Cdup.syntax;
@@ -18,7 +18,7 @@ export default class Cdup {
   async handler(): Promise<void> {
     try {
       return await new Dele(this.conn, this.data).handler();
-    } catch(e) {
+    } catch (e) {
       throw e;
     }
   }

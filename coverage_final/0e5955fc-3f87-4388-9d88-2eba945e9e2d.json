@@ -1,0 +1,91 @@
+{
+  "scriptId": "374",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/server/commands/RETR.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 1510,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 30,
+          "endOffset": 231,
+          "count": 3
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<static_initializer>",
+      "ranges": [
+        {
+          "startOffset": 46,
+          "endOffset": 184,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Retr",
+      "ranges": [
+        {
+          "startOffset": 235,
+          "endOffset": 445,
+          "count": 3
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "handler",
+      "ranges": [
+        {
+          "startOffset": 448,
+          "endOffset": 1507,
+          "count": 3
+        },
+        {
+          "startOffset": 501,
+          "endOffset": 567,
+          "count": 1
+        },
+        {
+          "startOffset": 567,
+          "endOffset": 598,
+          "count": 2
+        },
+        {
+          "startOffset": 598,
+          "endOffset": 664,
+          "count": 0
+        },
+        {
+          "startOffset": 664,
+          "endOffset": 692,
+          "count": 2
+        },
+        {
+          "startOffset": 692,
+          "endOffset": 838,
+          "count": 1
+        },
+        {
+          "startOffset": 838,
+          "endOffset": 1503,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

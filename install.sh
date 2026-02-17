@@ -1,49 +1,72 @@
 #!/bin/sh
+# DFtpS Installation Script
+# Installs DFtpS using Deno's built-in installer
 
 set -e
 
-if ! command -v unzip >/dev/null; then
-	echo "Error: unzip is required to install DFtpS." 1>&2
-	exit 1
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+echo "${GREEN}DFtpS Installer${NC}"
+echo "================"
+echo ""
+
+# Check if Deno is installed
+if ! command -v deno >/dev/null 2>&1; then
+    echo "${RED}Error: Deno is required to install DFtpS.${NC}" 1>&2
+    echo ""
+    echo "Install Deno first:"
+    echo "  curl -fsSL https://deno.land/install.sh | sh"
+    echo "  # or"
+    echo "  irm https://deno.land/install.ps1 | iex  # Windows PowerShell"
+    echo ""
+    exit 1
 fi
 
-if [ "$OS" = "Windows_NT" ]; then
-	echo "Error: DFtpS Not Compatible with windows." 1>&2
-	exit 1
-else
-	case $(uname -sm) in
-	"Darwin x86_64")
-  	echo "Error: DFtpS Not Compatible with windows." 1>&2
-	  exit 1
-  ;;
-	"Darwin arm64")
-  	echo "Error: DFtpS Not Compatible with windows." 1>&2
-	  exit 1
-  ;;
-	esac
+# Check Deno version (need 2.x)
+DENO_VERSION=$(deno --version | head -n1 | cut -d' ' -f2 | cut -d'.' -f1)
+if [ "$DENO_VERSION" -lt 2 ]; then
+    echo "${YELLOW}Warning: DFtpS requires Deno 2.x. You have Deno $DENO_VERSION.x${NC}" 1>&2
+    echo "Please upgrade Deno: deno upgrade"
+    exit 1
 fi
 
+echo "✓ Deno $(deno --version | head -n1) detected"
+echo ""
+
+# Determine install source
 if [ $# -eq 0 ]; then
-	uri="https://github.com/DevArtSite/DFtpS/releases/latest/download/dftps.zip"
+    # Install from JSR (when published) or GitHub
+    INSTALL_URL="https://raw.githubusercontent.com/DevArtSite/DFtpS/main/mod.ts"
 else
-	uri="https://github.com/DevArtSite/DFtpS/releases/download/${1}/dftps.zip"
+    # Install specific version
+    INSTALL_URL="https://raw.githubusercontent.com/DevArtSite/DFtpS/$1/mod.ts"
 fi
 
-bin_dir="/usr/bin"
-exe="dftps"
-archive="$exe.zip"
-config="$exe.toml"
+echo "Installing DFtpS..."
+echo ""
 
-curl --fail --location --progress-bar --output "$exe.zip" "$uri"
-unzip -o -j "$archive" "$exe" -d "$bin_dir"
+# Install using deno install
+deno install \
+    --global \
+    --allow-net \
+    --allow-read \
+    --allow-write \
+    --allow-env \
+    --name dftps \
+    --force \
+    "$INSTALL_URL"
 
-if [ ! -f "/etc/$exe.toml" ]; then
-  unzip -o -j "$archive" "$config" -d "/etc"
-fi
+echo ""
+echo "${GREEN}✓ DFtpS installed successfully!${NC}"
+echo ""
+echo "Next steps:"
+echo "  1. Create a config file: dftps init"
+echo "  2. Add users: dftps users add <username>"
+echo "  3. Start the server: dftps serve"
+echo ""
+echo "Run 'dftps --help' for more options."
 
-chmod +x "$bin_dir/$exe"
-rm "$exe.zip"
-
-echo "DftpS was installed successfully"
-echo "You must be modify you'r config file in '/etc/$exe.toml'"
-echo "Run 'dftps --help' to get started"

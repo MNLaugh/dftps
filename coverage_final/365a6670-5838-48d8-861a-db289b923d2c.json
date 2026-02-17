@@ -1,0 +1,96 @@
+{
+  "scriptId": "399",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/server/commands/RNTO.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 939,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 30,
+          "endOffset": 211,
+          "count": 4
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<static_initializer>",
+      "ranges": [
+        {
+          "startOffset": 46,
+          "endOffset": 164,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Rnto",
+      "ranges": [
+        {
+          "startOffset": 215,
+          "endOffset": 425,
+          "count": 4
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "handler",
+      "ranges": [
+        {
+          "startOffset": 428,
+          "endOffset": 936,
+          "count": 4
+        },
+        {
+          "startOffset": 481,
+          "endOffset": 547,
+          "count": 1
+        },
+        {
+          "startOffset": 547,
+          "endOffset": 580,
+          "count": 3
+        },
+        {
+          "startOffset": 580,
+          "endOffset": 646,
+          "count": 0
+        },
+        {
+          "startOffset": 646,
+          "endOffset": 674,
+          "count": 3
+        },
+        {
+          "startOffset": 674,
+          "endOffset": 731,
+          "count": 1
+        },
+        {
+          "startOffset": 731,
+          "endOffset": 853,
+          "count": 2
+        },
+        {
+          "startOffset": 853,
+          "endOffset": 932,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

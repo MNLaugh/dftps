@@ -1,0 +1,174 @@
+{
+  "scriptId": "373",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/_utils/logger.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 3456,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 34,
+          "endOffset": 1483,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 1506,
+          "endOffset": 1513,
+          "count": 2
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Logger",
+      "ranges": [
+        {
+          "startOffset": 1517,
+          "endOffset": 1703,
+          "count": 2
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "create",
+      "ranges": [
+        {
+          "startOffset": 1713,
+          "endOffset": 1766,
+          "count": 2
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "log",
+      "ranges": [
+        {
+          "startOffset": 1807,
+          "endOffset": 1946,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "success",
+      "ranges": [
+        {
+          "startOffset": 1987,
+          "endOffset": 2134,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "info",
+      "ranges": [
+        {
+          "startOffset": 2175,
+          "endOffset": 2318,
+          "count": 2
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "warn",
+      "ranges": [
+        {
+          "startOffset": 2359,
+          "endOffset": 2504,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "error",
+      "ranges": [
+        {
+          "startOffset": 2545,
+          "endOffset": 2688,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": false
+    },
+    {
+      "functionName": "debug",
+      "ranges": [
+        {
+          "startOffset": 2729,
+          "endOffset": 2876,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "handle",
+      "ranges": [
+        {
+          "startOffset": 2917,
+          "endOffset": 3430,
+          "count": 5
+        },
+        {
+          "startOffset": 3002,
+          "endOffset": 3006,
+          "count": 0
+        },
+        {
+          "startOffset": 3079,
+          "endOffset": 3083,
+          "count": 0
+        },
+        {
+          "startOffset": 3420,
+          "endOffset": 3424,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 3150,
+          "endOffset": 3370,
+          "count": 7
+        },
+        {
+          "startOffset": 3196,
+          "endOffset": 3223,
+          "count": 0
+        },
+        {
+          "startOffset": 3230,
+          "endOffset": 3363,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

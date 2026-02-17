@@ -1,0 +1,96 @@
+{
+  "scriptId": "373",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/server/commands/CWD.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 984,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 29,
+          "endOffset": 246,
+          "count": 5
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<static_initializer>",
+      "ranges": [
+        {
+          "startOffset": 45,
+          "endOffset": 199,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Cwd",
+      "ranges": [
+        {
+          "startOffset": 250,
+          "endOffset": 456,
+          "count": 5
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "handler",
+      "ranges": [
+        {
+          "startOffset": 459,
+          "endOffset": 981,
+          "count": 5
+        },
+        {
+          "startOffset": 512,
+          "endOffset": 578,
+          "count": 2
+        },
+        {
+          "startOffset": 578,
+          "endOffset": 610,
+          "count": 3
+        },
+        {
+          "startOffset": 610,
+          "endOffset": 676,
+          "count": 0
+        },
+        {
+          "startOffset": 676,
+          "endOffset": 704,
+          "count": 3
+        },
+        {
+          "startOffset": 704,
+          "endOffset": 758,
+          "count": 1
+        },
+        {
+          "startOffset": 758,
+          "endOffset": 898,
+          "count": 2
+        },
+        {
+          "startOffset": 898,
+          "endOffset": 977,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

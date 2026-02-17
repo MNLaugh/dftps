@@ -1,0 +1,66 @@
+{
+  "scriptId": "392",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/server/commands/NLST.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 638,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<instance_members_initializer>",
+      "ranges": [
+        {
+          "startOffset": 60,
+          "endOffset": 287,
+          "count": 2
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "<static_initializer>",
+      "ranges": [
+        {
+          "startOffset": 76,
+          "endOffset": 240,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "Nlst",
+      "ranges": [
+        {
+          "startOffset": 291,
+          "endOffset": 501,
+          "count": 2
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "handler",
+      "ranges": [
+        {
+          "startOffset": 504,
+          "endOffset": 635,
+          "count": 2
+        },
+        {
+          "startOffset": 599,
+          "endOffset": 631,
+          "count": 0
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}

@@ -3,8 +3,8 @@ import type { CommandData } from "./_REGISTRY.ts";
 
 export default class Quit {
   static directive = "QUIT";
-  static syntax = '{{cmd}}';
-  static description = 'Disconnect';
+  static syntax = "{{cmd}}";
+  static description = "Disconnect";
   static flags = {};
 
   description = Quit.description;
@@ -16,8 +16,8 @@ export default class Quit {
 
   async handler(): Promise<void> {
     try {
-      return await this.conn.close(221, 'Client called QUIT');
-    } catch(e) {
+      return await this.conn.close(221, "Client called QUIT");
+    } catch (e) {
       throw e;
     }
   }

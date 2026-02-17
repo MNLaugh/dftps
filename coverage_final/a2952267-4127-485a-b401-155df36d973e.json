@@ -1,0 +1,298 @@
+{
+  "scriptId": "335",
+  "url": "file:///D:/Dev/Packages/Deno/dftps/src/_utils/toml.ts",
+  "functions": [
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 0,
+          "endOffset": 4449,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "tomlJson",
+      "ranges": [
+        {
+          "startOffset": 112,
+          "endOffset": 2431,
+          "count": 16
+        },
+        {
+          "startOffset": 162,
+          "endOffset": 304,
+          "count": 0
+        },
+        {
+          "startOffset": 327,
+          "endOffset": 367,
+          "count": 15
+        },
+        {
+          "startOffset": 367,
+          "endOffset": 393,
+          "count": 1
+        },
+        {
+          "startOffset": 393,
+          "endOffset": 666,
+          "count": 15
+        },
+        {
+          "startOffset": 666,
+          "endOffset": 2415,
+          "count": 39
+        },
+        {
+          "startOffset": 701,
+          "endOffset": 710,
+          "count": 2
+        },
+        {
+          "startOffset": 710,
+          "endOffset": 786,
+          "count": 37
+        },
+        {
+          "startOffset": 786,
+          "endOffset": 2411,
+          "count": 34
+        },
+        {
+          "startOffset": 818,
+          "endOffset": 883,
+          "count": 4
+        },
+        {
+          "startOffset": 913,
+          "endOffset": 949,
+          "count": 4
+        },
+        {
+          "startOffset": 951,
+          "endOffset": 2405,
+          "count": 31
+        },
+        {
+          "startOffset": 1020,
+          "endOffset": 1084,
+          "count": 1
+        },
+        {
+          "startOffset": 1176,
+          "endOffset": 1197,
+          "count": 6
+        },
+        {
+          "startOffset": 1199,
+          "endOffset": 1377,
+          "count": 6
+        },
+        {
+          "startOffset": 1245,
+          "endOffset": 1313,
+          "count": 5
+        },
+        {
+          "startOffset": 1313,
+          "endOffset": 1367,
+          "count": 1
+        },
+        {
+          "startOffset": 1377,
+          "endOffset": 2397,
+          "count": 25
+        },
+        {
+          "startOffset": 1663,
+          "endOffset": 1689,
+          "count": 1
+        },
+        {
+          "startOffset": 1691,
+          "endOffset": 1886,
+          "count": 1
+        },
+        {
+          "startOffset": 1898,
+          "endOffset": 2387,
+          "count": 24
+        },
+        {
+          "startOffset": 2048,
+          "endOffset": 2131,
+          "count": 1
+        },
+        {
+          "startOffset": 2131,
+          "endOffset": 2375,
+          "count": 23
+        },
+        {
+          "startOffset": 2224,
+          "endOffset": 2283,
+          "count": 16
+        },
+        {
+          "startOffset": 2283,
+          "endOffset": 2361,
+          "count": 7
+        },
+        {
+          "startOffset": 2415,
+          "endOffset": 2430,
+          "count": 14
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "",
+      "ranges": [
+        {
+          "startOffset": 608,
+          "endOffset": 639,
+          "count": 39
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "setAttrValue",
+      "ranges": [
+        {
+          "startOffset": 2536,
+          "endOffset": 2870,
+          "count": 15
+        },
+        {
+          "startOffset": 2644,
+          "endOffset": 2745,
+          "count": 21
+        },
+        {
+          "startOffset": 2683,
+          "endOffset": 2710,
+          "count": 9
+        },
+        {
+          "startOffset": 2712,
+          "endOffset": 2741,
+          "count": 9
+        },
+        {
+          "startOffset": 2769,
+          "endOffset": 2804,
+          "count": 7
+        },
+        {
+          "startOffset": 2804,
+          "endOffset": 2868,
+          "count": 8
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "attrValueGet",
+      "ranges": [
+        {
+          "startOffset": 2956,
+          "endOffset": 3407,
+          "count": 32
+        },
+        {
+          "startOffset": 3031,
+          "endOffset": 3053,
+          "count": 2
+        },
+        {
+          "startOffset": 3053,
+          "endOffset": 3103,
+          "count": 30
+        },
+        {
+          "startOffset": 3080,
+          "endOffset": 3103,
+          "count": 1
+        },
+        {
+          "startOffset": 3103,
+          "endOffset": 3169,
+          "count": 29
+        },
+        {
+          "startOffset": 3169,
+          "endOffset": 3189,
+          "count": 21
+        },
+        {
+          "startOffset": 3190,
+          "endOffset": 3234,
+          "count": 17
+        },
+        {
+          "startOffset": 3236,
+          "endOffset": 3265,
+          "count": 15
+        },
+        {
+          "startOffset": 3265,
+          "endOffset": 3357,
+          "count": 14
+        },
+        {
+          "startOffset": 3357,
+          "endOffset": 3391,
+          "count": 3
+        },
+        {
+          "startOffset": 3391,
+          "endOffset": 3406,
+          "count": 11
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "strToArr",
+      "ranges": [
+        {
+          "startOffset": 3493,
+          "endOffset": 4179,
+          "count": 3
+        },
+        {
+          "startOffset": 3620,
+          "endOffset": 4047,
+          "count": 0
+        },
+        {
+          "startOffset": 4127,
+          "endOffset": 4163,
+          "count": 9
+        }
+      ],
+      "isBlockCoverage": true
+    },
+    {
+      "functionName": "objAdd",
+      "ranges": [
+        {
+          "startOffset": 4247,
+          "endOffset": 4422,
+          "count": 2
+        },
+        {
+          "startOffset": 4315,
+          "endOffset": 4420,
+          "count": 1
+        }
+      ],
+      "isBlockCoverage": true
+    }
+  ]
+}
