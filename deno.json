@@ -42,5 +42,12 @@
     "indentWidth": 2,
     "singleQuote": false
   },
+  "exclude": [
+    "tests/",
+    "tools/",
+    "assets/",
+    "coverage/",
+    ".github/"
+  ],
   "allowScripts": ["npm:better-sqlite3@11.10.0"]
 }
