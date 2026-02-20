@@ -1,76 +1,80 @@
-import { DPath } from '../../deps.ts';
+import { DPath } from "../../deps.ts";
 
 /** TOML to JSON */
 // deno-lint-ignore no-explicit-any
 const tomlJson = (source: { fileUrl?: string; data?: string }): any => {
   let arr: Array<string> = [];
   if (source.fileUrl) {
-    const UInt = Deno.readFileSync(DPath.resolve('.', source.fileUrl));
-    arr = new TextDecoder().decode(UInt).toString().split('\n');
+    const UInt = Deno.readFileSync(DPath.resolve(".", source.fileUrl));
+    arr = new TextDecoder().decode(UInt).toString().split("\n");
   } else if (source.data) {
-    arr = source.data.split('\n');
+    arr = source.data.split("\n");
   } else {
     return {};
   }
 
   // deno-lint-ignore no-explicit-any
   const obj: any = {};
-  let key = '';
+  let key = "";
 
   /** The key is array of Line breaks */
-  let keyArrayB = '';
+  let keyArrayB = "";
 
   /** The value is array of Line breaks */
-  let valueArrayB = '';
+  let valueArrayB = "";
 
-  arr = arr.map(str => str.replaceAll("\r", ""));
+  arr = arr.map((str) => str.replaceAll("\r", ""));
 
   for (const str of arr) {
-    if (str.indexOf('#') !== -1) continue;
+    if (str.indexOf("#") !== -1) continue;
 
-    let noSpace = str.replace(/(^ +)|( +$)/g, '');
+    let noSpace = str.replace(/(^ +)|( +$)/g, "");
 
-    if (noSpace !== '') {
-      if (valueArrayB !== '') {
-        valueArrayB += str.replace(/(^ +)|( +$)/g, '');
+    if (noSpace !== "") {
+      if (valueArrayB !== "") {
+        valueArrayB += str.replace(/(^ +)|( +$)/g, "");
       }
 
-      if (valueArrayB === '' || (valueArrayB !== '' && str === ']')) {
+      if (valueArrayB === "" || (valueArrayB !== "" && str === "]")) {
         // Synthesize array string
-        if (valueArrayB !== '') {
+        if (valueArrayB !== "") {
           noSpace = `${keyArrayB} = ${valueArrayB}`;
         }
 
         const value = /^\[(.+)\]$/.exec(noSpace);
 
         // if it's obj
-        if (value && valueArrayB === '') {
-          if (value[1].indexOf('.') === -1) {
+        if (value && valueArrayB === "") {
+          if (value[1].indexOf(".") === -1) {
             key = value[1];
             obj[key] = {};
           } else {
             objAdd(obj, value[1]);
           }
         } else {
-          valueArrayB = '';
-          keyArrayB = '';
+          valueArrayB = "";
+          keyArrayB = "";
 
           const testSyntax = /^(.+)=(.+)/.exec(noSpace);
           if (testSyntax && testSyntax.length > 0) {
             const k = testSyntax[1];
             const v = testSyntax[2];
-            if (k[k.length-1] !== " " && v[v.length -1] !== " ") throw new Error("Syntaxe like \"key='value'\" is not allowed! You have to replace \"key='value'\" by \"key = 'value'\" with spaces on each side of the equal sign.")
+            if (k[k.length - 1] !== " " && v[v.length - 1] !== " ") {
+              throw new Error(
+                "Syntaxe like \"key='value'\" is not allowed! You have to replace \"key='value'\" by \"key = 'value'\" with spaces on each side of the equal sign.",
+              );
+            }
           }
           const sttr = /^(.+) = (.+)/.exec(noSpace);
 
           if (sttr) {
             // It's array of Line breaks
-            if (sttr[2] === '[') {
+            if (sttr[2] === "[") {
               keyArrayB = sttr[1];
-              valueArrayB = '[';
+              valueArrayB = "[";
             } else {
               const sttrValue = attrValueGet(sttr[2]);
-              if (key === '') {
+              if (key === "") {
                 obj[sttr[1]] = sttrValue;
               } else {
                 setAttrValue(obj, sttr[1], sttrValue);
@@ -88,14 +92,14 @@ const tomlJson = (source: { fileUrl?: string; data?: string }): any => {
 // deno-lint-ignore no-explicit-any
 const setAttrValue = (obj: any, sttrKey: string, sttrValue: any) => {
   const keys = Object.keys(obj);
-  let keyValue = '';
+  let keyValue = "";
   for (const str of keys) {
-    if (typeof obj[str] === 'object' && !Array.isArray(obj[str])) {
+    if (typeof obj[str] === "object" && !Array.isArray(obj[str])) {
       keyValue = str;
     }
   }
 
-  if (keyValue === '') {
+  if (keyValue === "") {
     obj[sttrKey] = sttrValue;
   } else {
     setAttrValue(obj[keyValue], sttrKey, sttrValue);
@@ -105,12 +109,12 @@ const setAttrValue = (obj: any, sttrKey: string, sttrValue: any) => {
 /** get attribute value */
 // deno-lint-ignore no-explicit-any
 const attrValueGet = (str: string): any => {
-  str = str.replace(/\"/g, '');
+  str = str.replace(/\"/g, "");
 
   // boolen
-  if (str === 'true') {
+  if (str === "true") {
     return true;
-  } else if (str === 'false') {
+  } else if (str === "false") {
     return false;
   }
 
@@ -119,7 +123,7 @@ const attrValueGet = (str: string): any => {
   if (
     numStr &&
     numStr[1] === str &&
-    str.indexOf('.') === str.lastIndexOf('.')
+    str.indexOf(".") === str.lastIndexOf(".")
   ) {
     return Number(str);
   }
@@ -139,27 +143,27 @@ const attrValueGet = (str: string): any => {
 const strToArr = (str: string): Array<any> => {
   // deno-lint-ignore no-explicit-any
   let list: Array<any> = [];
-  if (str.indexOf('[') === -1) {
-    list = str.split(',');
+  if (str.indexOf("[") === -1) {
+    list = str.split(",");
   } else {
-    const cArr = str.split('');
+    const cArr = str.split("");
     let startNum = 0;
-    let value = '';
+    let value = "";
     for (const c of cArr) {
-      if (c === '[') {
+      if (c === "[") {
         startNum++;
-      } else if (c === ']') {
+      } else if (c === "]") {
         startNum--;
       }
 
-      if (startNum === 0 && c === ',') {
-        list.push(value.replace(/(^ +)|( +$)/g, ''));
-        value = '';
+      if (startNum === 0 && c === ",") {
+        list.push(value.replace(/(^ +)|( +$)/g, ""));
+        value = "";
       } else {
         value += c;
       }
     }
-    list.push(value.replace(/(^ +)|( +$)/g, ''));
+    list.push(value.replace(/(^ +)|( +$)/g, ""));
   }
 
   // deno-lint-ignore no-explicit-any

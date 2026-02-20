@@ -3,10 +3,10 @@ import type { CommandData } from "./_REGISTRY.ts";
 
 export default class Size {
   static directive = "SIZE";
-  static syntax = '{{cmd}} <path>';
-  static description = 'Return the size of a file';
+  static syntax = "{{cmd}} <path>";
+  static description = "Return the size of a file";
   static flags = {
-    feat: 'SIZE'
+    feat: "SIZE",
   };
 
   description = Size.description;
@@ -18,14 +18,15 @@ export default class Size {
 
   async handler(): Promise<void> {
     try {
-      if (!this.conn.fs) return await this.conn.reply(550, 'File system not instantiated');
-      if (!this.conn.fs.get) return await this.conn.reply(402, 'Not supported by file system');
-      if (!this.data.args) return await this.conn.reply(501, 'Arguments not found');
+      if (!this.conn.fs) return await this.conn.reply(550, "File system not instantiated");
+      if (!this.conn.fs.get) return await this.conn.reply(402, "Not supported by file system");
+      if (!this.data.args) return await this.conn.reply(501, "Arguments not found");
       const fileStat = await this.conn.fs.get(this.data.args);
       return await this.conn.close(213, fileStat.size.toString());
-    } catch(e) {
-      e.code ||= 550;
-      throw e;
+    } catch (e) {
+      const err = e as Error & { code?: number };
+      err.code ||= 550;
+      throw err;
     }
   }
 }

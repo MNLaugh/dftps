@@ -2,12 +2,12 @@ import Connection from "../connection.ts";
 import type { CommandData } from "./_REGISTRY.ts";
 
 export default class Pass {
-  static directive = 'PASS';
-  static syntax = '{{cmd}} <password>';
-  static description = 'Authentication password';
+  static directive = "PASS";
+  static syntax = "{{cmd}} <password>";
+  static description = "Authentication password";
   static flags = {
-    noAuth: true
-  }
+    noAuth: true,
+  };
 
   description = Pass.description;
   syntax = Pass.syntax;
@@ -20,12 +20,13 @@ export default class Pass {
     try {
       if (!this.conn.username) return await this.conn.reply(503);
       if (this.conn.authenticated) return await this.conn.reply(202);
-      if (!this.data.args) return await this.conn.close(501, 'Must provide password');
+      if (!this.data.args) return await this.conn.close(501, "Must provide password");
       await this.conn.login(this.data.args);
       return await this.conn.reply(230);
     } catch (e) {
-      e.code ||= 530;
-      throw e;
+      const err = e as Error & { code?: number };
+      err.code ||= 530;
+      throw err;
     }
   }
 }

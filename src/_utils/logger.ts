@@ -7,7 +7,7 @@ export enum Colors {
   Blink = "\x1b[5m",
   Reverse = "\x1b[7m",
   Hidden = "\x1b[8m",
-    
+
   FgBlack = "\x1b[30m",
   FgRed = "\x1b[31m",
   FgGreen = "\x1b[32m",
@@ -16,7 +16,7 @@ export enum Colors {
   FgMagenta = "\x1b[35m",
   FgCyan = "\x1b[36m",
   FgWhite = "\x1b[37m",
-    
+
   BgBlack = "\x1b[40m",
   BgRed = "\x1b[41m",
   BgGreen = "\x1b[42m",
@@ -54,7 +54,7 @@ export interface LoggerOptions {
 
 class Logger {
   private options: LoggerOptions;
-  constructor (options: LoggerOptions = {}) {
+  constructor(options: LoggerOptions = {}) {
     if (options.colorize === undefined) options.colorize = true;
     if (options.preLine === undefined) options.preLine = "  ";
     this.options = options;
@@ -109,13 +109,17 @@ class Logger {
       options.prefix,
       // deno-lint-ignore no-explicit-any
       args.map((arg: any) => {
-        return (typeof arg === "string" || typeof args === "number") ? arg
-        : (arg instanceof Error) ? `${arg.stack}`
-          : (arg instanceof Array) ? arg.toString()
-            : (typeof arg === "object") ? JSON.stringify(arg)
-              : arg;
+        return (typeof arg === "string" || typeof args === "number")
+          ? arg
+          : (arg instanceof Error)
+          ? `${arg.stack}`
+          : (arg instanceof Array)
+          ? arg.toString()
+          : (typeof arg === "object")
+          ? JSON.stringify(arg)
+          : arg;
       }).join(" "),
-      (this.options.colorize) ? Colors.Reset : ""
+      (this.options.colorize) ? Colors.Reset : "",
     );
   }
 }

@@ -3,10 +3,9 @@ import type { CommandData } from "./_REGISTRY.ts";
 
 export default class Abor {
   static directive = "ABOR";
-  static syntax = '{{cmd}}';
-  static description = 'Abort an active file transfer';
+  static syntax = "{{cmd}}";
+  static description = "Abort an active file transfer";
   static flags = {};
-
 
   description = Abor.description;
   syntax = Abor.syntax;
@@ -23,8 +22,9 @@ export default class Abor {
       }
       return await this.conn.reply(226);
     } catch (e) {
-      e.code ||= 225;
-      throw e;
+      const err = e as Error & { code?: number };
+      err.code ||= 225;
+      throw err;
     }
   }
 }

@@ -1,37 +1,77 @@
-import { MuxAsyncIterator, BufReader } from "../../deps.ts";
-import type { ReadLineResult } from "../../deps.ts";
-
-class IterablleReader implements AsyncIterable<Uint8Array> {
+/**
+ * Modern async iterable reader for FTP connections.
+ * Uses native streams instead of deprecated BufReader/MuxAsyncIterator.
+ */
+class IterableReader implements AsyncIterable<Uint8Array> {
   #closed = false;
-  constructor(public conn: Deno.Conn, public length: number = 1024) {}
+  #buffer = "";
+  #reader: ReadableStreamDefaultReader<Uint8Array>;
 
-  close() {
+  constructor(public conn: Deno.Conn) {
+    this.#reader = conn.readable.getReader();
+  }
+
+  close(): void {
     this.#closed = true;
+    this.#reader.releaseLock();
   }
 
-  private async *acceptAndIterateFtpConnections(
-    mux: MuxAsyncIterator<Uint8Array>
-  ): AsyncIterableIterator<Uint8Array> {
-    if (this.#closed) return;
-    try {
-      const reader = new BufReader(this.conn);
-      const result: ReadLineResult | null = await reader.readLine();
-      if (!result) return;
-      const uint = result.line;
-      // Try to accept another connection and add it to the multiplexer.
-      mux.add(this.acceptAndIterateFtpConnections(mux));
-      // Yield the requests that arrive on the just-accepted connection.
-      yield uint;
-    } catch (e) {
-      throw e;
+  /**
+   * Reads lines from the connection, yielding each complete line as Uint8Array.
+   * FTP protocol uses \r\n as line delimiter.
+   */
+  async *[Symbol.asyncIterator](): AsyncIterableIterator<Uint8Array> {
+    const decoder = new TextDecoder();
+    const encoder = new TextEncoder();
+
+    while (!this.#closed) {
+      try {
+        const { value, done } = await this.#reader.read();
+
+        if (done) {
+          // Connection closed, yield any remaining buffer content
+          if (this.#buffer.length > 0) {
+            yield encoder.encode(this.#buffer);
+            this.#buffer = "";
+          }
+          break;
+        }
+
+        // Add received data to buffer
+        this.#buffer += decoder.decode(value);
+
+        // Process complete lines (FTP uses \r\n)
+        let lineEnd: number;
+        while ((lineEnd = this.#buffer.indexOf("\r\n")) !== -1) {
+          const line = this.#buffer.substring(0, lineEnd);
+          this.#buffer = this.#buffer.substring(lineEnd + 2);
+          yield encoder.encode(line);
+        }
+
+        // Also handle single \n for compatibility
+        while ((lineEnd = this.#buffer.indexOf("\n")) !== -1) {
+          const line = this.#buffer.substring(0, lineEnd).replace(/\r$/, "");
+          this.#buffer = this.#buffer.substring(lineEnd + 1);
+          yield encoder.encode(line);
+        }
+      } catch (e) {
+        // Handle various connection close scenarios gracefully
+        const errorName = (e as Error).name;
+        if (
+          e instanceof Deno.errors.BadResource ||
+          e instanceof Deno.errors.Interrupted ||
+          e instanceof Deno.errors.ConnectionReset ||
+          errorName === "UnexpectedEof" ||
+          errorName === "ConnectionRefused" ||
+          errorName === "ConnectionAborted"
+        ) {
+          // Connection closed, exit gracefully
+          break;
+        }
+        throw e;
+      }
     }
-  }
-
-  [Symbol.asyncIterator](): AsyncIterableIterator<Uint8Array> {
-    const mux: MuxAsyncIterator<Uint8Array> = new MuxAsyncIterator();
-    mux.add(this.acceptAndIterateFtpConnections(mux));
-    return mux.iterate();
   }
 }
 
-export default IterablleReader;
+export default IterableReader;

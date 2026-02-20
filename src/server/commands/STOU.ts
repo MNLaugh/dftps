@@ -4,8 +4,8 @@ import Stor from "./STOR.ts";
 
 export default class Stou {
   static directive = "STOU";
-  static syntax = '{{cmd}}';
-  static description = 'Store file uniquely';
+  static syntax = "{{cmd}}";
+  static description = "Store file uniquely";
   static flags = {};
 
   description = Stou.description;
@@ -17,9 +17,9 @@ export default class Stou {
 
   async handler(): Promise<void> {
     try {
-      if (!this.conn.fs) return await this.conn.reply(550, 'File system not instantiated');
-      if (!this.conn.fs.get) return await this.conn.reply(402, 'Not supported by file system');
-      if (!this.data.args) return await this.conn.reply(501, 'Arguments not found');
+      if (!this.conn.fs) return await this.conn.reply(550, "File system not instantiated");
+      if (!this.conn.fs.get) return await this.conn.reply(402, "Not supported by file system");
+      if (!this.data.args) return await this.conn.reply(501, "Arguments not found");
       const fileName = this.data.args;
       const getUniqueName = this.conn.fs.getUniqueName;
       this.conn.fs.get(this.data.args)
@@ -29,9 +29,10 @@ export default class Stou {
           this.data.args = name;
           return new Stor(this.conn, this.data).handler();
         });
-    } catch(e) {
-      e.code ||= 550;
-      throw e;
+    } catch (e) {
+      const err = e as Error & { code?: number };
+      err.code ||= 550;
+      throw err;
     }
   }
 }

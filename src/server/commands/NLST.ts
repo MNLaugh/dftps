@@ -4,10 +4,9 @@ import List from "./LIST.ts";
 
 export default class Nlst {
   static directive = "NLST";
-  static syntax = '{{cmd}} [<path>]';
-  static description = 'Returns a list of file names in a specified directory';
+  static syntax = "{{cmd}} [<path>]";
+  static description = "Returns a list of file names in a specified directory";
   static flags = {};
-
 
   description = Nlst.description;
   syntax = Nlst.syntax;
@@ -19,7 +18,7 @@ export default class Nlst {
   async handler(): Promise<void> {
     try {
       return await new List(this.conn, this.data).handler();
-    } catch(e) {
+    } catch (e) {
       throw e;
     }
   }

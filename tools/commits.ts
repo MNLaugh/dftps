@@ -6,12 +6,11 @@ const newCommits = [];
 const lastCommitID = "bf1060c";
 for (const commit of commits) {
   if (commit.sha.search(lastCommitID) !== -1) {
-    console.log("ici")
+    console.log("ici");
     break;
-  }
-  else newCommits.push(commit);
+  } else newCommits.push(commit);
 }
 
 newCommits.forEach(({ sha, commit, html_url }) => {
-  console.log(`${commit.message} ([${sha.substring(0, 7)}](${html_url}))`)
-})
+  console.log(`${commit.message} ([${sha.substring(0, 7)}](${html_url}))`);
+});
