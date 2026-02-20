@@ -2,22 +2,43 @@
  * Database module for DFtpS using native Deno SQLite
  *
  * Uses @db/sqlite for native SQLite support in Deno.
+ *
+ * @module
  */
 
 import { Database } from "@db/sqlite";
 import * as schema from "./schema.ts";
 
+/** Supported database connector types */
 export type DatabaseConnector = "SQLite";
 
+/** SQLite database configuration */
 export interface SQLiteConfig {
+  /** Database connector type */
   connector: "SQLite";
+  /** Path to the SQLite database file */
   filepath: string;
 }
 
+/** Database configuration options */
 export type DatabaseConfig = SQLiteConfig;
 
 let db: Database;
 
+/**
+ * Initialize and create the SQLite database
+ *
+ * Creates the database file and initializes the users table schema.
+ * Must be called before using any database operations.
+ *
+ * @param config - Database configuration with connector type and filepath
+ * @returns The initialized Database instance
+ *
+ * @example
+ * ```ts
+ * const db = createDb({ connector: "SQLite", filepath: "./users.db" });
+ * ```
+ */
 export function createDb(config: DatabaseConfig): Database {
   if (config.connector !== "SQLite") {
     throw new Error("Only SQLite is supported in this version.");
@@ -42,6 +63,12 @@ export function createDb(config: DatabaseConfig): Database {
   return db;
 }
 
+/**
+ * Get the current database instance
+ *
+ * @returns The Database instance
+ * @throws If createDb() has not been called first
+ */
 export function getDb(): Database {
   if (!db) {
     throw new Error("Database not initialized. Call createDb() first.");

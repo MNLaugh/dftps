@@ -57,6 +57,11 @@ export enum Status {
   ActionNotTaken = 550, // RFC 959, 4.2.1
 }
 
+/**
+ * Map of FTP status codes to human-readable messages
+ *
+ * Used to provide default response messages for FTP status codes.
+ */
 export const STATUS_TEXT: Map<number, string> = new Map<number, string>([
   [Status.FileStatusOK, "Using transfer connection"],
   [Status.OK, "OK"],

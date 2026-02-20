@@ -15,37 +15,68 @@ import ActiveConnection from "./connectors/active.ts";
 import type { Deferred } from "../../deps.ts";
 import type { FTPServerOptions } from "./mod.ts";
 
+/** Options for sending a reply to the FTP client */
 export type replyOptions = {
+  /** FTP response code */
   code?: number;
+  /** Whether to send an empty message */
   useEmptyMessage?: boolean;
+  /** End of line character */
   eol?: string;
+  /** Custom writer for the response */
   writer?: WritableStreamDefaultWriter<Uint8Array>;
 };
+
+/** A single reply letter/line in an FTP response */
 export type replyLetter = {
+  /** Message content */
   message?: string;
+  /** Text encoding */
   encoding?: string;
+  /** Whether this is raw output */
   raw?: boolean;
+  /** Optional response code override */
   code?: number;
+  /** Custom writer */
   writer?: WritableStreamDefaultWriter<Uint8Array>;
 };
+
+/** Reply content - can be a string, undefined, or a replyLetter object */
 export type replyLetters = string | undefined | replyLetter;
 
+/** Data passed when waiting for username resolution */
 export type UsernameResolvable = {
+  /** The username provided by the client */
   username: string;
+  /** Deferred promise to resolve when username is accepted */
   resolveUsername: Deferred<void>;
 };
 
+/** Data passed when waiting for login resolution */
 export type LoginResolvable = {
+  /** The password provided by the client */
   password: string;
+  /** Deferred promise to resolve with login data */
   resolvePassword: Deferred<LoginData>;
 };
 
+/**
+ * Login data returned after successful authentication
+ *
+ * Contains the user's root directory and permissions.
+ */
 export type LoginData = {
+  /** Root directory for this user */
   root: string;
+  /** User ID for permission checks */
   uid: number;
+  /** Group ID for permission checks */
   gid: number;
+  /** Initial current working directory */
   cwd?: string;
+  /** Custom filesystem handler */
   fs?: FileSystem;
+  /** Commands to blacklist for this user */
   blacklist?: string[];
 };
 

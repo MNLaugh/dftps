@@ -14,13 +14,20 @@ import Connection from "./connection.ts";
 
 /** Options for initializing a FileSystem instance */
 export type FileSystemOptions = {
+  /** Root directory for this user */
   root: string;
+  /** Initial current working directory */
   cwd?: string;
+  /** Unix user ID for permission checks */
   uid: number;
+  /** Unix group ID for permission checks */
   gid: number;
 };
 
+/** Function type for formatting file stat output (e.g., for LIST command) */
 export type statFunction = (fileStat: FileInfo) => string;
+
+/** Extended file info with name property */
 export type FileInfo = Deno.FileInfo & { name: string };
 
 /** Represents an open file stream for transfer */
