@@ -96,7 +96,7 @@ export class Users {
   /**
    * Legacy compatibility: where query (simplified)
    */
-  static where(field: keyof User, value: string | number) {
+  static where(field: keyof User, value: string | number): { get: () => User[] } {
     return {
       get: (): User[] => {
         if (field === "username") {

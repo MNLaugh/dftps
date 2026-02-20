@@ -45,7 +45,7 @@ export enum Status {
   ActionNotTaken = 550, // RFC 959, 4.2.1
 }
 
-export const STATUS_TEXT = new Map<number, string>([
+export const STATUS_TEXT: Map<number, string> = new Map<number, string>([
   [Status.FileStatusOK, "Using transfer connection"],
   [Status.OK, "OK"],
   [Status.NotImplemented, "Not Implemented"],
