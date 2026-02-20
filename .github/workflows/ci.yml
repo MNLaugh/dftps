@@ -37,7 +37,7 @@ jobs:
         run: deno cache deps.ts
 
       - name: Run unit tests
-        run: deno test --allow-all tests/database_test.ts tests/users_test.ts tests/server_test.ts
+        run: deno test --allow-all --ignore=tests/integration_test.ts tests/
 
       # Integration tests require mkcert, skip on CI for now
       # - name: Run integration tests

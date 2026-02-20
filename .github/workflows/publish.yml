@@ -25,8 +25,8 @@ jobs:
       - name: Type check
         run: deno check mod.ts
 
-      - name: Run tests
-        run: deno test --allow-all tests/database_test.ts tests/users_test.ts tests/server_test.ts
+      - name: Cache dependencies
+        run: deno cache deps.ts
 
       - name: Publish to JSR
         run: npx jsr publish --allow-slow-types
