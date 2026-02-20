@@ -39,6 +39,7 @@ import Rnto from "./RNTO.ts";
 import Stat from "./STAT.ts";
 import Stru from "./STRU.ts";
 import Clnt from "./CLNT.ts";
+import Help from "./HELP.ts";
 
 export type CommandFlags = {
   obsolete?: boolean;
@@ -93,7 +94,8 @@ export type Commands =
   | Rnto
   | Stat
   | Stru
-  | Clnt;
+  | Clnt
+  | Help;
 
 export type CommandConstructor = {
   directive: string | string[];
@@ -144,6 +146,7 @@ export const REGISTRY: Array<CommandConstructor> = [
   Stat,
   Stru,
   Clnt,
+  Help,
 ];
 
 // Build Map for O(1) lookup instead of O(n) array search

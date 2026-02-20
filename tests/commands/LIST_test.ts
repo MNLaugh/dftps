@@ -219,7 +219,7 @@ Deno.test("LIST handler - returns 425 when accept fails", async () => {
     writer: null,
     close: () => {},
   };
-  const { conn, replies } = createMockConnection({ fs: mockFs, connector: mockConnector });
+  const { conn } = createMockConnection({ fs: mockFs, connector: mockConnector });
   
   const cmd = new ListCmd(conn, createCommandData("LIST", ""));
   

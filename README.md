@@ -1,7 +1,7 @@
 # DFtpS - Deno Ftp Server
 
 ![logo](./assets/dftps_logo.png)
-[![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/dftps/mod.ts)
+[![deno doc](https://doc.deno.land/badge.svg)](https://mnlaugh.github.io/dftps-guide/)
 
 DFtpS is an FTP server based on [ftp-srv](https://github.com/autovance/ftp-srv) with Deno.
 
@@ -13,7 +13,7 @@ DFtpS is an FTP server based on [ftp-srv](https://github.com/autovance/ftp-srv) 
 - Native Streams API (no more BufReader/BufWriter)
 - Full TypeScript strict mode
 
-Check our guide in [https://devartsite.github.io/dftps-guide/guide/](https://devartsite.github.io/dftps-guide/)
+Check our guide in [https://mnlaugh.github.io/dftps-guide/guide/](https://mnlaugh.github.io/dftps-guide/)
 
 - [Install](#install)
 - [Make your own](#make-your-own)

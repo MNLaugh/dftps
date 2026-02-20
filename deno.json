@@ -1,6 +1,7 @@
 {
   "name": "@dftps/server",
   "version": "2.0.0",
+  "license": "MIT",
   "exports": "./mod.ts",
   "nodeModulesDir": "auto",
   "tasks": {
