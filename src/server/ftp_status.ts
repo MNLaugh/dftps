@@ -1,7 +1,19 @@
-// Status codes as documented by =
-// https://tools.ietf.org/html/rfc959
-// https://tools.ietf.org/html/rfc2428
-// https://tools.ietf.org/html/rfc2228
+/**
+ * FTP Status codes and messages
+ *
+ * Defines FTP response codes as per RFC 959, RFC 2228, and RFC 2428.
+ *
+ * @module
+ */
+
+/**
+ * FTP status codes enum
+ *
+ * Standard FTP response codes as documented by:
+ * - RFC 959 - File Transfer Protocol
+ * - RFC 2428 - FTP Extensions for IPv6 and NATs
+ * - RFC 2228 - FTP Security Extensions
+ */
 export enum Status {
   // 100 Series - The requested action is being initiated, expect another reply before
   // proceeding with a new command.

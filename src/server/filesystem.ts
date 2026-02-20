@@ -1,8 +1,18 @@
+/**
+ * Virtual filesystem for FTP operations
+ *
+ * This module provides filesystem abstraction for FTP commands,
+ * handling path resolution, permissions, and file operations.
+ *
+ * @module
+ */
+
 import { DPath, exists, format, v4 } from "../../deps.ts";
 import { SEPARATOR as SEP } from "@std/path";
 import { padStart } from "../_utils/lodash.ts";
 import Connection from "./connection.ts";
 
+/** Options for initializing a FileSystem instance */
 export type FileSystemOptions = {
   root: string;
   cwd?: string;
@@ -13,8 +23,11 @@ export type FileSystemOptions = {
 export type statFunction = (fileStat: FileInfo) => string;
 export type FileInfo = Deno.FileInfo & { name: string };
 
+/** Represents an open file stream for transfer */
 export type StreamFile = {
+  /** The file handle */
   stream: Deno.FsFile;
+  /** Path as seen by the FTP client */
   clientPath: string;
 };
 
@@ -23,6 +36,12 @@ type ResolvedPath = {
   fsPath: string;
 };
 
+/**
+ * Virtual filesystem for FTP operations
+ *
+ * Handles all file operations for an FTP connection including
+ * directory navigation, file reads/writes, and permissions.
+ */
 export default class FileSystem {
   connection: Connection;
   cwd: string;

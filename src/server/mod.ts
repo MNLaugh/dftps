@@ -30,8 +30,23 @@ export type FTPServerOptions = {
   webhook?: string;
 };
 
+/** Options for webhook notifications */
 export type webookOptions = string | number | Error;
 
+/**
+ * FTP Server class
+ *
+ * Main class for creating and managing an FTP server.
+ * Implements AsyncIterable to accept client connections in a for-await loop.
+ *
+ * @example
+ * ```ts
+ * const server = new Server({ port: 21 });
+ * for await (const connection of server) {
+ *   // Handle connection
+ * }
+ * ```
+ */
 class Server implements AsyncIterable<Connection> {
   #closed = false;
   #connections: Connection[] = [];
@@ -41,6 +56,7 @@ class Server implements AsyncIterable<Connection> {
   options: FTPServerOptions & { pasvUrl: string };
   /** TCP listener */
   listener: Deno.Listener;
+  /** Whether the server uses TLS */
   secure = false;
 
   logger: Logger;

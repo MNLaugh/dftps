@@ -1,0 +1,32 @@
+name: Publish to JSR
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: "2.x"
+
+      - name: Type check
+        run: deno check mod.ts
+
+      - name: Run tests
+        run: deno test --allow-all tests/database_test.ts tests/users_test.ts tests/server_test.ts
+
+      - name: Publish to JSR
+        run: npx jsr publish --allow-slow-types

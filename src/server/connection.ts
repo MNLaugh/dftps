@@ -54,6 +54,25 @@ const HIDDEN_TO_SECURE = "HIDDEN_TO_SECURE";
 // Connection ID counter for unique identification
 let connectionIdCounter = 0;
 
+/**
+ * Represents a single FTP client connection
+ *
+ * Handles all communication with a connected FTP client including
+ * authentication, command processing, and data transfers.
+ *
+ * @example
+ * ```ts
+ * for await (const connection of server) {
+ *   connection.on("login", async ({ username, password }, resolve, reject) => {
+ *     if (username === "admin" && password === "secret") {
+ *       resolve({ root: "/srv/ftp", uid: 1000, gid: 1000 });
+ *     } else {
+ *       reject();
+ *     }
+ *   });
+ * }
+ * ```
+ */
 export default class Connection {
   #closed = false;
   #writer: WritableStreamDefaultWriter<Uint8Array>;
