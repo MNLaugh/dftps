@@ -120,7 +120,7 @@ class Server implements AsyncIterable<Connection> {
       method: "POST",
       body: JSON.stringify({
         content,
-        avatar_url: "https://github.com/DevArtSite/dftps/raw/main/assets/dftps_logo_tiny.png",
+        avatar_url: "https://github.com/MNLaugh/dftps/raw/main/assets/dftps_logo_tiny.png",
         username: "DFtpS",
       }),
       headers: { "Content-Type": "application/json" },
