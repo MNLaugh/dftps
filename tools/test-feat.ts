@@ -34,7 +34,7 @@ async function readAll(): Promise<string> {
     const lastLine = lines[lines.length - 1];
     if (/^\d{3} /.test(lastLine)) break;
     // Small delay to allow more data to arrive
-    await new Promise(r => setTimeout(r, 50));
+    await new Promise((r) => setTimeout(r, 50));
   }
   return result;
 }
@@ -50,7 +50,7 @@ await conn.write(encoder.encode("FEAT\r\n"));
 const feat = await readAll();
 console.log(feat);
 
-// Quit  
+// Quit
 console.log("=== QUIT ===");
 await conn.write(encoder.encode("QUIT\r\n"));
 const quit = await readAll();

@@ -164,7 +164,7 @@ Deno.test("compact - preserves objects and arrays", () => {
 });
 
 // ============================================================================
-// Edge case tests for toFinite/toInteger coverage  
+// Edge case tests for toFinite/toInteger coverage
 // ============================================================================
 
 Deno.test("chunk - handles Infinity size", () => {

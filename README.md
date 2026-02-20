@@ -1,7 +1,6 @@
 # DFtpS - Deno Ftp Server
 
-![logo](./assets/dftps_logo.png)
-[![deno doc](https://doc.deno.land/badge.svg)](https://mnlaugh.github.io/dftps-guide/)
+![logo](./assets/dftps_logo.png) [![deno doc](https://doc.deno.land/badge.svg)](https://mnlaugh.github.io/dftps-guide/)
 
 DFtpS is an FTP server based on [ftp-srv](https://github.com/autovance/ftp-srv) with Deno.
 

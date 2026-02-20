@@ -3,7 +3,7 @@
  */
 import { assertEquals } from "@std/assert";
 import { findCommand } from "../../src/server/commands/_REGISTRY.ts";
-import { createMockConnection, createCommandData } from "./_mock_helpers.ts";
+import { createCommandData, createMockConnection } from "./_mock_helpers.ts";
 
 Deno.test("EPSV handler - has correct directive", () => {
   const EpsvCmd = findCommand("EPSV")!;
@@ -23,9 +23,9 @@ Deno.test("EPSV handler - instance has correct properties", () => {
   const { conn } = createMockConnection({
     options: { pasvUrl: "192.168.1.1" },
   });
-  
+
   const cmd = new EpsvCmd(conn, createCommandData("EPSV", ""));
-  
+
   assertEquals(cmd.directive, "EPSV");
   assertEquals(cmd.description, "Initiate passive mode");
   assertEquals(cmd.syntax, "{{cmd}} [<protocol>]");
@@ -37,9 +37,9 @@ Deno.test("EPSV handler - handler creates passive connection successfully", asyn
   const { conn, replies } = createMockConnection({
     options: { pasvUrl: "127.0.0.1" },
   });
-  
+
   const cmd = new EpsvCmd(conn, createCommandData("EPSV", ""));
-  
+
   try {
     await cmd.handler();
     // If it succeeds, verify the reply and clean up

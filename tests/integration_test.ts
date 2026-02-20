@@ -259,7 +259,7 @@ Deno.test({
 
     // Send FEAT and read all response
     await conn.write(encoder.encode("FEAT\r\n"));
-    
+
     let response = "";
     while (true) {
       const n = await conn.read(buffer);
@@ -269,7 +269,7 @@ Deno.test({
       const lines = response.trim().split("\n");
       const lastLine = lines[lines.length - 1];
       if (/^211 /.test(lastLine)) break;
-      await new Promise(r => setTimeout(r, 50));
+      await new Promise((r) => setTimeout(r, 50));
     }
 
     // Verify FEAT response contains expected features

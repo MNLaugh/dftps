@@ -37,7 +37,7 @@ export default class Mlsd {
         }
 
         const writer = this.conn.connector.writer;
-        
+
         try {
           const files = await fs.list(path);
           await this.conn.reply(150, "Opening data connection for MLSD");

@@ -301,7 +301,7 @@ function compact(array: Array<string | null>): Array<string | null> {
 export function mlsx(fileStat: FileInfo): string {
   const type = fileStat.isDirectory ? "dir" : "file";
   const mtime = fileStat.mtime ? new Date(fileStat.mtime) : new Date();
-  
+
   // Format: YYYYMMDDHHMMSS
   const modify = [
     mtime.getUTCFullYear(),
@@ -313,7 +313,7 @@ export function mlsx(fileStat: FileInfo): string {
   ].join("");
 
   // Permissions for MLSx
-  // a - APPE allowed, c - create allowed, d - delete allowed, 
+  // a - APPE allowed, c - create allowed, d - delete allowed,
   // e - enter directory, f - rename, l - list, m - mkdir, p - purge,
   // r - read, w - write
   let perm = "";

@@ -19,7 +19,7 @@ export default class Feat {
 
   async handler(): Promise<void> {
     const features: string[] = ["UTF8"];
-    
+
     // Collect features from registered commands
     for (const Command of REGISTRY) {
       if (Command.flags?.feat) {
@@ -29,10 +29,10 @@ export default class Feat {
 
     // RFC 2389 format: multi-line response with each feature on its own line
     if (features.length) {
-      const featureLines = features.map(feat => ` ${feat}`);
+      const featureLines = features.map((feat) => ` ${feat}`);
       return await this.conn.reply(211, [
         "Features:",
-        ...featureLines.map(line => ({ message: line, raw: true })),
+        ...featureLines.map((line) => ({ message: line, raw: true })),
         "End",
       ]);
     } else {

@@ -106,11 +106,11 @@ Deno.test("Logger - log outputs message", () => {
   const logs: unknown[][] = [];
   const originalLog = console.log;
   console.log = (...args: unknown[]) => logs.push(args);
-  
+
   try {
     const logger = new Logger({ prefix: "[Test]", colorize: false });
     logger.log("test message");
-    
+
     assertEquals(logs.length, 1);
     // Check that the message contains our text
     const output = logs[0].join(" ");
@@ -124,11 +124,11 @@ Deno.test("Logger - handles objects", () => {
   const logs: unknown[][] = [];
   const originalLog = console.log;
   console.log = (...args: unknown[]) => logs.push(args);
-  
+
   try {
     const logger = new Logger({ colorize: false });
     logger.log({ key: "value" });
-    
+
     assertEquals(logs.length, 1);
     const output = logs[0].join(" ");
     assertEquals(output.includes('{"key":"value"}'), true);
@@ -141,11 +141,11 @@ Deno.test("Logger - handles errors", () => {
   const logs: unknown[][] = [];
   const originalLog = console.log;
   console.log = (...args: unknown[]) => logs.push(args);
-  
+
   try {
     const logger = new Logger({ colorize: false });
     logger.error(new Error("test error"));
-    
+
     assertEquals(logs.length, 1);
     const output = logs[0].join(" ");
     assertEquals(output.includes("Error: test error"), true);
@@ -158,11 +158,11 @@ Deno.test("Logger - handles arrays", () => {
   const logs: unknown[][] = [];
   const originalLog = console.log;
   console.log = (...args: unknown[]) => logs.push(args);
-  
+
   try {
     const logger = new Logger({ colorize: false });
     logger.log([1, 2, 3]);
-    
+
     assertEquals(logs.length, 1);
     const output = logs[0].join(" ");
     assertEquals(output.includes("1,2,3"), true);

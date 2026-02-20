@@ -81,7 +81,7 @@ enabled = true`;
 
 Deno.test("toml - parses inline array", () => {
   // Note: TOML parser preserves spaces after commas
-  const result = tomlJson({ data: 'ports = [21,22,80]' });
+  const result = tomlJson({ data: "ports = [21,22,80]" });
   assertEquals(result.ports, [21, 22, 80]);
 });
 

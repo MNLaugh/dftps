@@ -33,18 +33,18 @@ function createMockConn(chunks: Uint8Array[]): Deno.Conn {
 Deno.test("IterableReader - TextDecoder decodes UTF-8", () => {
   const decoder = new TextDecoder();
   const encoder = new TextEncoder();
-  
+
   const text = "Hello FTP\r\n";
   const encoded = encoder.encode(text);
   const decoded = decoder.decode(encoded);
-  
+
   assertEquals(decoded, text);
 });
 
 Deno.test("IterableReader - handles CRLF line endings", () => {
   const buffer = "USER admin\r\nPASS secret\r\n";
   const lines: string[] = [];
-  
+
   let remaining = buffer;
   let lineEnd: number;
   while ((lineEnd = remaining.indexOf("\r\n")) !== -1) {
@@ -52,7 +52,7 @@ Deno.test("IterableReader - handles CRLF line endings", () => {
     remaining = remaining.substring(lineEnd + 2);
     lines.push(line);
   }
-  
+
   assertEquals(lines, ["USER admin", "PASS secret"]);
   assertEquals(remaining, "");
 });
@@ -60,7 +60,7 @@ Deno.test("IterableReader - handles CRLF line endings", () => {
 Deno.test("IterableReader - handles LF-only line endings", () => {
   const buffer = "USER admin\nPASS secret\n";
   const lines: string[] = [];
-  
+
   let remaining = buffer;
   let lineEnd: number;
   while ((lineEnd = remaining.indexOf("\n")) !== -1) {
@@ -68,7 +68,7 @@ Deno.test("IterableReader - handles LF-only line endings", () => {
     remaining = remaining.substring(lineEnd + 1);
     lines.push(line);
   }
-  
+
   assertEquals(lines, ["USER admin", "PASS secret"]);
   assertEquals(remaining, "");
 });
@@ -76,9 +76,9 @@ Deno.test("IterableReader - handles LF-only line endings", () => {
 Deno.test("IterableReader - handles mixed line endings", () => {
   const buffer = "CMD1\r\nCMD2\nCMD3\r\n";
   const lines: string[] = [];
-  
+
   let remaining = buffer;
-  
+
   // First process CRLF
   let lineEnd: number;
   while ((lineEnd = remaining.indexOf("\r\n")) !== -1) {
@@ -86,14 +86,14 @@ Deno.test("IterableReader - handles mixed line endings", () => {
     remaining = remaining.substring(lineEnd + 2);
     lines.push(line);
   }
-  
+
   // Then process LF
   while ((lineEnd = remaining.indexOf("\n")) !== -1) {
     const line = remaining.substring(0, lineEnd).replace(/\r$/, "");
     remaining = remaining.substring(lineEnd + 1);
     lines.push(line);
   }
-  
+
   // After CRLF processing, data becomes: "USER admin\nPASS secret\nQUIT"
   // The QUIT doesn't have a line ending so it stays in buffer
   assertEquals(lines.length, 2);
@@ -101,19 +101,19 @@ Deno.test("IterableReader - handles mixed line endings", () => {
 
 Deno.test("IterableReader - preserves partial data in buffer", () => {
   let buffer = "";
-  
+
   // Simulate receiving partial data
   buffer += "USER adm";
   assertEquals(buffer.indexOf("\r\n"), -1);
-  
+
   // More data arrives
   buffer += "in\r\n";
   const lineEnd = buffer.indexOf("\r\n");
   assertEquals(lineEnd, 10);
-  
+
   const line = buffer.substring(0, lineEnd);
   buffer = buffer.substring(lineEnd + 2);
-  
+
   assertEquals(line, "USER admin");
   assertEquals(buffer, "");
 });
@@ -121,7 +121,7 @@ Deno.test("IterableReader - preserves partial data in buffer", () => {
 Deno.test("IterableReader - handles empty lines", () => {
   const buffer = "\r\n\r\nCMD\r\n";
   const lines: string[] = [];
-  
+
   let remaining = buffer;
   let lineEnd: number;
   while ((lineEnd = remaining.indexOf("\r\n")) !== -1) {
@@ -129,17 +129,17 @@ Deno.test("IterableReader - handles empty lines", () => {
     remaining = remaining.substring(lineEnd + 2);
     lines.push(line);
   }
-  
+
   assertEquals(lines, ["", "", "CMD"]);
 });
 
 Deno.test("IterableReader - handles long commands", () => {
   const longArg = "A".repeat(1000);
   const buffer = `STOR ${longArg}\r\n`;
-  
+
   const lineEnd = buffer.indexOf("\r\n");
   const line = buffer.substring(0, lineEnd);
-  
+
   assertEquals(line.length, 1005);
   assertEquals(line, `STOR ${longArg}`);
 });
@@ -147,11 +147,11 @@ Deno.test("IterableReader - handles long commands", () => {
 Deno.test("IterableReader - handles UTF-8 characters", () => {
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
-  
+
   const text = "STOR fichier-été-2026.txt\r\n";
   const encoded = encoder.encode(text);
   const decoded = decoder.decode(encoded);
-  
+
   assertEquals(decoded, text);
 });
 
@@ -159,7 +159,7 @@ Deno.test("IterableReader - handles binary-like data in path", () => {
   const buffer = "STOR file with spaces.txt\r\n";
   const lineEnd = buffer.indexOf("\r\n");
   const line = buffer.substring(0, lineEnd);
-  
+
   assertEquals(line, "STOR file with spaces.txt");
 });
 
@@ -173,15 +173,15 @@ Deno.test("IterableReader - yields lines from stream", async () => {
     encoder.encode("USER admin\r\n"),
     encoder.encode("PASS secret\r\n"),
   ]);
-  
+
   const reader = new IterableReader(mockConn);
   const lines: string[] = [];
   const decoder = new TextDecoder();
-  
+
   for await (const chunk of reader) {
     lines.push(decoder.decode(chunk));
   }
-  
+
   assertEquals(lines, ["USER admin", "PASS secret"]);
 });
 
@@ -193,15 +193,15 @@ Deno.test("IterableReader - handles chunked data", async () => {
     encoder.encode("in\r\nPASS"),
     encoder.encode(" secret\r\n"),
   ]);
-  
+
   const reader = new IterableReader(mockConn);
   const lines: string[] = [];
   const decoder = new TextDecoder();
-  
+
   for await (const chunk of reader) {
     lines.push(decoder.decode(chunk));
   }
-  
+
   assertEquals(lines, ["USER admin", "PASS secret"]);
 });
 
@@ -210,15 +210,15 @@ Deno.test("IterableReader - handles multiple lines in single chunk", async () =>
   const mockConn = createMockConn([
     encoder.encode("CMD1\r\nCMD2\r\nCMD3\r\n"),
   ]);
-  
+
   const reader = new IterableReader(mockConn);
   const lines: string[] = [];
   const decoder = new TextDecoder();
-  
+
   for await (const chunk of reader) {
     lines.push(decoder.decode(chunk));
   }
-  
+
   assertEquals(lines, ["CMD1", "CMD2", "CMD3"]);
 });
 
@@ -227,15 +227,15 @@ Deno.test("IterableReader - handles LF only line endings", async () => {
   const mockConn = createMockConn([
     encoder.encode("CMD1\nCMD2\n"),
   ]);
-  
+
   const reader = new IterableReader(mockConn);
   const lines: string[] = [];
   const decoder = new TextDecoder();
-  
+
   for await (const chunk of reader) {
     lines.push(decoder.decode(chunk));
   }
-  
+
   assertEquals(lines, ["CMD1", "CMD2"]);
 });
 
@@ -245,15 +245,15 @@ Deno.test("IterableReader - yields remaining buffer on close", async () => {
   const mockConn = createMockConn([
     encoder.encode("PARTIAL"),
   ]);
-  
+
   const reader = new IterableReader(mockConn);
   const lines: string[] = [];
   const decoder = new TextDecoder();
-  
+
   for await (const chunk of reader) {
     lines.push(decoder.decode(chunk));
   }
-  
+
   assertEquals(lines, ["PARTIAL"]);
 });
 
@@ -262,25 +262,25 @@ Deno.test("IterableReader - close method releases reader", () => {
   const mockConn = createMockConn([
     encoder.encode("DATA\r\n"),
   ]);
-  
+
   const reader = new IterableReader(mockConn);
   reader.close();
-  
+
   // After close, the reader should not throw
   assertEquals(typeof reader.close, "function");
 });
 
 Deno.test("IterableReader - handles empty stream", async () => {
   const mockConn = createMockConn([]);
-  
+
   const reader = new IterableReader(mockConn);
   const lines: string[] = [];
   const decoder = new TextDecoder();
-  
+
   for await (const chunk of reader) {
     lines.push(decoder.decode(chunk));
   }
-  
+
   assertEquals(lines, []);
 });
 
@@ -289,15 +289,15 @@ Deno.test("IterableReader - handles UTF-8 data", async () => {
   const mockConn = createMockConn([
     encoder.encode("STOR été-2026.txt\r\n"),
   ]);
-  
+
   const reader = new IterableReader(mockConn);
   const lines: string[] = [];
   const decoder = new TextDecoder();
-  
+
   for await (const chunk of reader) {
     lines.push(decoder.decode(chunk));
   }
-  
+
   assertEquals(lines, ["STOR été-2026.txt"]);
 });
 
@@ -327,40 +327,40 @@ function createErrorConn(error: Error): Deno.Conn {
 
 Deno.test("IterableReader - handles BadResource error gracefully", async () => {
   const mockConn = createErrorConn(new Deno.errors.BadResource("Connection closed"));
-  
+
   const reader = new IterableReader(mockConn);
   const lines: string[] = [];
-  
+
   for await (const chunk of reader) {
     lines.push(new TextDecoder().decode(chunk));
   }
-  
+
   assertEquals(lines, []);
 });
 
 Deno.test("IterableReader - handles Interrupted error gracefully", async () => {
   const mockConn = createErrorConn(new Deno.errors.Interrupted("Interrupted"));
-  
+
   const reader = new IterableReader(mockConn);
   const lines: string[] = [];
-  
+
   for await (const chunk of reader) {
     lines.push(new TextDecoder().decode(chunk));
   }
-  
+
   assertEquals(lines, []);
 });
 
 Deno.test("IterableReader - handles ConnectionReset error gracefully", async () => {
   const mockConn = createErrorConn(new Deno.errors.ConnectionReset("Connection reset"));
-  
+
   const reader = new IterableReader(mockConn);
   const lines: string[] = [];
-  
+
   for await (const chunk of reader) {
     lines.push(new TextDecoder().decode(chunk));
   }
-  
+
   assertEquals(lines, []);
 });
 
@@ -368,14 +368,14 @@ Deno.test("IterableReader - handles UnexpectedEof error gracefully", async () =>
   const error = new Error("Unexpected end of file");
   error.name = "UnexpectedEof";
   const mockConn = createErrorConn(error);
-  
+
   const reader = new IterableReader(mockConn);
   const lines: string[] = [];
-  
+
   for await (const chunk of reader) {
     lines.push(new TextDecoder().decode(chunk));
   }
-  
+
   assertEquals(lines, []);
 });
 
@@ -383,14 +383,14 @@ Deno.test("IterableReader - handles ConnectionRefused error gracefully", async (
   const error = new Error("Connection refused");
   error.name = "ConnectionRefused";
   const mockConn = createErrorConn(error);
-  
+
   const reader = new IterableReader(mockConn);
   const lines: string[] = [];
-  
+
   for await (const chunk of reader) {
     lines.push(new TextDecoder().decode(chunk));
   }
-  
+
   assertEquals(lines, []);
 });
 
@@ -398,23 +398,23 @@ Deno.test("IterableReader - handles ConnectionAborted error gracefully", async (
   const error = new Error("Connection aborted");
   error.name = "ConnectionAborted";
   const mockConn = createErrorConn(error);
-  
+
   const reader = new IterableReader(mockConn);
   const lines: string[] = [];
-  
+
   for await (const chunk of reader) {
     lines.push(new TextDecoder().decode(chunk));
   }
-  
+
   assertEquals(lines, []);
 });
 
 Deno.test("IterableReader - rethrows unknown errors", async () => {
   const mockConn = createErrorConn(new Error("Unknown error"));
-  
+
   const reader = new IterableReader(mockConn);
   let errorThrown = false;
-  
+
   try {
     for await (const _ of reader) {
       // Should not reach here
@@ -423,6 +423,6 @@ Deno.test("IterableReader - rethrows unknown errors", async () => {
     errorThrown = true;
     assertEquals((e as Error).message, "Unknown error");
   }
-  
+
   assertEquals(errorThrown, true);
 });

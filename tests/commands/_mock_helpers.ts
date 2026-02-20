@@ -26,7 +26,11 @@ export interface MockConnectionOptions {
 
 export interface MockFileSystem {
   currentDirectory?: () => string;
-  get?: (path: string) => Promise<{ isDirectory?: boolean; name?: string; size?: number; mtime?: Date | number | null; isFile?: boolean } | null>;
+  get?: (
+    path: string,
+  ) => Promise<
+    { isDirectory?: boolean; name?: string; size?: number; mtime?: Date | number | null; isFile?: boolean } | null
+  >;
   list?: (path: string) => Promise<Array<{ name: string; isDirectory: boolean; size?: number; mtime?: Date }>>;
   stat?: (file: { name: string }, format: string) => string | null;
   chdir?: (path: string) => Promise<string>;
@@ -87,12 +91,12 @@ export function createMockConnection(opts: MockConnectionOptions = {}): {
     options: opts.options ?? {},
     serve: opts.serve ?? { secure: false, addr: {} },
     bufferSize: opts.bufferSize,
-    
+
     reply: (code: number, message?: string | Error) => {
       replies.push({ code, message });
       return Promise.resolve();
     },
-    
+
     close: (code?: number, message?: string) => {
       closed = true;
       if (code) {
@@ -100,12 +104,12 @@ export function createMockConnection(opts: MockConnectionOptions = {}): {
       }
       return Promise.resolve();
     },
-    
+
     setUsername: (username: string) => {
       mockConn.username = username;
       return Promise.resolve();
     },
-    
+
     login: (_password: string) => {
       mockConn.authenticated = true;
       return Promise.resolve();
@@ -115,6 +119,8 @@ export function createMockConnection(opts: MockConnectionOptions = {}): {
   return {
     conn: mockConn,
     replies,
-    get closed() { return closed; },
+    get closed() {
+      return closed;
+    },
   };
 }

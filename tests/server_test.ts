@@ -93,14 +93,14 @@ Deno.test({
       blacklist: ["DELE"],
       fileFormat: "mlsx",
     });
-    
+
     assertExists(server.options);
     assertEquals(server.options.debug, true);
     assertEquals(server.options.anonymous, true);
     assertEquals(server.options.blacklist, ["DELE"]);
     assertEquals(server.options.fileFormat, "mlsx");
     assertEquals(server.options.pasvUrl, TEST_HOST);
-    
+
     server.close();
   },
   sanitizeResources: false,
@@ -112,10 +112,10 @@ Deno.test({
   async fn() {
     const port = getTestPort();
     const server = createTestServer(port);
-    
+
     await server.close();
     assertEquals(server.listener !== undefined, true);
-    
+
     // Attempting to connect should fail after close
     try {
       await connectToServer(port);
@@ -133,10 +133,10 @@ Deno.test({
   fn() {
     const port = getTestPort();
     const server = createTestServer(port, { debug: true });
-    
+
     // Should not throw when debug is called
     server.debug("Test debug message");
-    
+
     server.close();
   },
   sanitizeResources: false,
@@ -148,10 +148,10 @@ Deno.test({
   fn() {
     const port = getTestPort();
     const server = createTestServer(port);
-    
+
     // Without TLS, secure should be false
     assertEquals(server.secure, false);
-    
+
     server.close();
   },
   sanitizeResources: false,
@@ -163,12 +163,12 @@ Deno.test({
   async fn() {
     const port = getTestPort();
     const server = createTestServer(port);
-    
+
     // Should not throw when webhook is not configured
     await server.webhookError("Test error");
     await server.webhookError(500);
     await server.webhookError(new Error("Test error object"));
-    
+
     server.close();
   },
   sanitizeResources: false,
@@ -179,10 +179,10 @@ Deno.test({
   fn() {
     const port = getTestPort();
     const server = createTestServer(port);
-    
+
     assertEquals(server.addr.hostname, TEST_HOST);
     assertEquals(server.addr.port, port);
-    
+
     server.close();
   },
   sanitizeResources: false,
@@ -194,23 +194,23 @@ Deno.test({
   async fn() {
     const port = getTestPort();
     const server = createTestServer(port);
-    
+
     // Start accepting connections
     const serverPromise = (async () => {
       for await (const _conn of server) {
         break;
       }
     })();
-    
+
     await delay(50);
-    
+
     // Connect a client
     const conn = await connectToServer(port);
     await readResponse(conn);
-    
+
     // Close server with active connection
     await server.close();
-    
+
     // The connection should be closed
     conn.close();
     await serverPromise;
@@ -225,7 +225,7 @@ Deno.test({
     const port = getTestPort();
     const server = createTestServer(port);
     let connectionCount = 0;
-    
+
     // Accept multiple connections
     const serverPromise = (async () => {
       for await (const _conn of server) {
@@ -233,17 +233,17 @@ Deno.test({
         if (connectionCount >= 2) break;
       }
     })();
-    
+
     await delay(50);
-    
+
     // Connect two clients
     const conn1 = await connectToServer(port);
     await delay(100);
     const conn2 = await connectToServer(port);
     await delay(200);
-    
+
     assertEquals(connectionCount, 2);
-    
+
     conn1.close();
     conn2.close();
     server.close();
@@ -258,10 +258,10 @@ Deno.test({
   fn() {
     const port = getTestPort();
     const server = createTestServer(port, { debug: false });
-    
+
     // Should not throw
     server.debug("This should be ignored");
-    
+
     server.close();
   },
   sanitizeResources: false,
@@ -274,11 +274,11 @@ Deno.test({
     const port = getTestPort();
     const addr = { hostname: TEST_HOST, port };
     const server = new Server(addr);
-    
+
     // Default options should be set
     assertEquals(server.options.pasvUrl, TEST_HOST);
     assertEquals(server.secure, false);
-    
+
     server.close();
   },
   sanitizeResources: false,

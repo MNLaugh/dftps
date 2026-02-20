@@ -7,7 +7,7 @@ import { delay } from "@std/async";
 import Server from "../src/server/mod.ts";
 import type { FTPServerOptions, ListenOptions } from "../src/server/mod.ts";
 import Connection from "../src/server/connection.ts";
-import { loadTestCerts, certsExist } from "./fixtures/test_certs.ts";
+import { certsExist, loadTestCerts } from "./fixtures/test_certs.ts";
 
 const TEST_HOST = "127.0.0.1";
 let testPort = 3100;
@@ -42,7 +42,9 @@ async function connectToServer(port: number): Promise<Deno.Conn> {
 async function readResponse(conn: Deno.Conn, timeout = 3000): Promise<string> {
   const buffer = new Uint8Array(2048);
   const timeoutId = setTimeout(() => {
-    try { conn.close(); } catch { /* ignore */ }
+    try {
+      conn.close();
+    } catch { /* ignore */ }
   }, timeout);
   try {
     const n = await conn.read(buffer);
@@ -70,7 +72,7 @@ Deno.test({
 
     const conn = await connectToServer(port);
     const welcome = await readResponse(conn);
-    
+
     assertStringIncludes(welcome, "220");
     assertStringIncludes(welcome, "Welcome");
 
@@ -337,10 +339,10 @@ Deno.test({
   name: "Connection - has options from server",
   async fn() {
     const port = getTestPort();
-    const server = createTestServer(port, { 
-      debug: true, 
+    const server = createTestServer(port, {
+      debug: true,
       anonymous: true,
-      fileFormat: "mlsx"
+      fileFormat: "mlsx",
     });
     let connection: Connection | undefined;
 
@@ -477,13 +479,13 @@ Deno.test({
     await delay(200);
 
     assertExists(connection);
-    
+
     // Setup a listener to resolve the username
     const usernamePromise = connection!.setUsername("testuser");
     const { resolveUsername } = await connection!.awaitUsername;
     resolveUsername.resolve();
     await usernamePromise;
-    
+
     assertEquals(connection!.username, "testuser");
 
     conn.close();
@@ -515,9 +517,9 @@ Deno.test({
 
     assertExists(connection);
     assertEquals(connection!.closed, false);
-    
+
     await connection!.close();
-    
+
     assertEquals(connection!.closed, true);
 
     conn.close();
@@ -546,17 +548,17 @@ Deno.test({
 
     const conn = await connectToServer(port);
     await readResponse(conn); // Read welcome message
-    
+
     assertExists(connection);
-    
+
     // Close with code - this sends a reply before closing
     const closePromise = connection!.close(221, "Goodbye");
     await delay(100);
-    
+
     // Read the goodbye message
     const goodbye = await readResponse(conn);
     await closePromise;
-    
+
     assertStringIncludes(goodbye, "221");
 
     conn.close();
@@ -585,13 +587,13 @@ Deno.test({
 
     const conn = await connectToServer(port);
     await readResponse(conn); // Read welcome message
-    
+
     assertExists(connection);
-    
+
     // Reply with multiple lines
     await connection!.reply(211, ["Line 1", "Line 2", "Line 3"]);
     await delay(100);
-    
+
     const response = await readResponse(conn);
     assertStringIncludes(response, "211");
 
@@ -621,13 +623,13 @@ Deno.test({
 
     const conn = await connectToServer(port);
     await readResponse(conn); // Read welcome message
-    
+
     assertExists(connection);
-    
+
     // Reply with replyLetter object
     await connection!.reply(200, { message: "Custom reply", encoding: "utf8" });
     await delay(100);
-    
+
     const response = await readResponse(conn);
     assertStringIncludes(response, "200");
     assertStringIncludes(response, "Custom reply");
@@ -658,13 +660,13 @@ Deno.test({
 
     const conn = await connectToServer(port);
     await readResponse(conn); // Read welcome message
-    
+
     assertExists(connection);
-    
+
     // Reply with empty message option
     await connection!.reply({ code: 200, useEmptyMessage: true });
     await delay(100);
-    
+
     // Should receive empty message (just newline)
     const response = await readResponse(conn);
     // The response should be minimal
@@ -682,8 +684,8 @@ Deno.test({
   name: "Connection - blacklisted command returns 502",
   async fn() {
     const port = getTestPort();
-    const server = createTestServer(port, { 
-      blacklist: ["DELE", "RMD"]
+    const server = createTestServer(port, {
+      blacklist: ["DELE", "RMD"],
     });
     let connection: Connection | undefined;
 
@@ -700,13 +702,13 @@ Deno.test({
 
     const conn = await connectToServer(port);
     await readResponse(conn); // Read welcome message
-    
+
     assertExists(connection);
-    
+
     // Send blacklisted command
     await conn.write(new TextEncoder().encode("DELE somefile\r\n"));
     await delay(200);
-    
+
     const response = await readResponse(conn);
     assertStringIncludes(response, "502");
     assertStringIncludes(response, "blacklisted");
@@ -739,13 +741,13 @@ Deno.test({
 
     const conn = await connectToServer(port);
     await readResponse(conn); // Read welcome message
-    
+
     assertExists(connection);
-    
+
     // Send unknown command
     await conn.write(new TextEncoder().encode("UNKNOWNCMD args\r\n"));
     await delay(200);
-    
+
     const response = await readResponse(conn);
     assertStringIncludes(response, "502");
     assertStringIncludes(response, "not implemented");
@@ -778,13 +780,13 @@ Deno.test({
 
     const conn = await connectToServer(port);
     await readResponse(conn); // Read welcome message
-    
+
     assertExists(connection);
-    
+
     // Send NOOP command to exercise debug logging
     await conn.write(new TextEncoder().encode("NOOP\r\n"));
     await delay(200);
-    
+
     const response = await readResponse(conn);
     assertStringIncludes(response, "200");
 
@@ -816,13 +818,13 @@ Deno.test({
     await delay(200);
 
     assertExists(connection);
-    
+
     // Setup a listener that rejects
     const usernamePromise = connection!.setUsername("baduser");
     const { resolveUsername } = await connection!.awaitUsername;
     resolveUsername.reject(new Error("User not allowed"));
     await usernamePromise;
-    
+
     // Username should not be set on error
     assertEquals(connection!.username, undefined);
 
@@ -855,19 +857,19 @@ Deno.test({
     await delay(200);
 
     assertExists(connection);
-    
+
     // First set username
     const usernamePromise = connection!.setUsername("testuser");
     const { resolveUsername } = await connection!.awaitUsername;
     resolveUsername.resolve();
     await usernamePromise;
-    
+
     // Then login with uid=0 which gives root access
     const loginPromise = connection!.login("password123");
     const { resolvePassword } = await connection!.awaitLogin;
     resolvePassword.resolve({ root: tempDir, uid: 0, gid: 0 });
     await loginPromise;
-    
+
     assertEquals(connection!.authenticated, true);
     assertExists(connection!.fs);
 
@@ -900,14 +902,14 @@ Deno.test({
     await readResponse(conn); // Read welcome message
 
     assertExists(connection);
-    
+
     // Login that will be rejected
     const loginPromise = connection!.login("wrongpassword");
     const { resolvePassword } = await connection!.awaitLogin;
     resolvePassword.reject(new Error("Invalid password"));
     await loginPromise;
     await delay(100);
-    
+
     // Read the error reply
     const response = await readResponse(conn);
     assertStringIncludes(response, "430");
@@ -943,18 +945,18 @@ Deno.test({
     await delay(200);
 
     assertExists(connection);
-    
+
     // Login with blacklist (use uid=0 for root access)
     const loginPromise = connection!.login("password");
     const { resolvePassword } = await connection!.awaitLogin;
-    resolvePassword.resolve({ 
-      root: tempDir, 
-      uid: 0, 
+    resolvePassword.resolve({
+      root: tempDir,
+      uid: 0,
       gid: 0,
-      blacklist: ["DELE", "RMD"]
+      blacklist: ["DELE", "RMD"],
     });
     await loginPromise;
-    
+
     assertExists(connection!.options.blacklist);
     assertEquals(connection!.options.blacklist!.includes("DELE"), true);
     assertEquals(connection!.options.blacklist!.includes("RMD"), true);
@@ -988,18 +990,18 @@ Deno.test({
     await readResponse(conn); // Read welcome message
 
     assertExists(connection);
-    
+
     // Login with non-existent root
     const loginPromise = connection!.login("password");
     const { resolvePassword } = await connection!.awaitLogin;
-    resolvePassword.resolve({ 
-      root: "/nonexistent/path/that/does/not/exist", 
-      uid: 1000, 
-      gid: 1000
+    resolvePassword.resolve({
+      root: "/nonexistent/path/that/does/not/exist",
+      uid: 1000,
+      gid: 1000,
     });
     await loginPromise;
     await delay(100);
-    
+
     // Read the error reply
     const response = await readResponse(conn);
     assertStringIncludes(response, "550");
@@ -1034,15 +1036,17 @@ Deno.test({
     await delay(200);
 
     assertExists(connection);
-    
+
     // Mock a connector
     let connectorClosed = false;
     connection!.connector = {
-      close: () => { connectorClosed = true; },
+      close: () => {
+        connectorClosed = true;
+      },
     } as unknown as typeof connection.connector;
-    
+
     await connection!.close();
-    
+
     assertEquals(connectorClosed, true);
     assertEquals(connection!.closed, true);
 
@@ -1080,10 +1084,10 @@ Deno.test({
     await delay(100);
 
     assertExists(connection);
-    
+
     // Call reply with empty array - should use default letter
     await connection!.reply(200, []);
-    
+
     const response = await readResponse(conn);
     assertStringIncludes(response, "200");
 
@@ -1117,10 +1121,10 @@ Deno.test({
     await delay(100);
 
     assertExists(connection);
-    
+
     // Use an unknown code that doesn't exist in STATUS_TEXT
     await connection!.reply(999);
-    
+
     const response = await readResponse(conn);
     assertStringIncludes(response, "999");
     assertStringIncludes(response, "No information");
@@ -1155,10 +1159,10 @@ Deno.test({
     await delay(100);
 
     assertExists(connection);
-    
+
     // Multiple letters should use "-" separator for all but last
     await connection!.reply(211, ["Line 1", "Line 2", "Line 3"]);
-    
+
     const response = await readResponse(conn);
     assertStringIncludes(response, "211");
 
@@ -1192,10 +1196,10 @@ Deno.test({
     await delay(100);
 
     assertExists(connection);
-    
+
     // With eol option, should use space separator
     await connection!.reply({ code: 200, eol: "\r\n" }, "Test message");
-    
+
     const response = await readResponse(conn);
     assertStringIncludes(response, "200");
 
@@ -1224,16 +1228,16 @@ Deno.test({
     await delay(50);
 
     const conn = await connectToServer(port);
-    // Read welcome message first  
+    // Read welcome message first
     await readResponse(conn);
     await delay(100);
 
     assertExists(connection);
-    
+
     // Reply with object that has raw as true - tests raw branch
     // deno-lint-ignore no-explicit-any
     await connection!.reply(200, { message: "Raw message only", raw: "string value" } as any);
-    
+
     const response = await readResponse(conn);
     assertStringIncludes(response, "Raw message only");
 
@@ -1262,25 +1266,25 @@ Deno.test({
     await delay(50);
 
     const conn = await connectToServer(port);
-    // Read welcome message first  
+    // Read welcome message first
     await readResponse(conn);
     await delay(100);
 
     assertExists(connection);
-    
+
     // Create a custom writer that captures writes
     const writtenData: Uint8Array[] = [];
     const customWriter = {
       write: (data: Uint8Array) => {
         writtenData.push(data);
         return Promise.resolve(data.length);
-      }
+      },
     };
-    
+
     // Reply with custom writer in options (use as unknown to bypass type check)
     // deno-lint-ignore no-explicit-any
     await connection!.reply({ code: 200, writer: customWriter as unknown as any }, "Custom writer test");
-    
+
     // Check data was written to custom writer
     assertEquals(writtenData.length, 1);
 
@@ -1314,10 +1318,10 @@ Deno.test({
     await delay(100);
 
     assertExists(connection);
-    
+
     // Letter with its own code
     await connection!.reply(200, { message: "Custom", code: 250 });
-    
+
     const response = await readResponse(conn);
     // The letter code should be used
     assertStringIncludes(response, "250");
@@ -1356,20 +1360,20 @@ Deno.test({
     await delay(100);
 
     assertExists(connection);
-    
+
     // Start setUsername in background
     const setUsernamePromise = connection!.setUsername("testuser");
-    
+
     // Wait for awaitUsername to be resolved with the resolveUsername deferred
     await delay(50);
-    
+
     // Simulate server rejecting the username
     const usernameData = await connection!.awaitUsername;
     usernameData.resolveUsername.reject(new Error("Username not allowed"));
-    
+
     // Wait for setUsername to complete
     await setUsernamePromise;
-    
+
     // Should receive 430 error
     const response = await readResponse(conn);
     assertStringIncludes(response, "430");
@@ -1404,20 +1408,20 @@ Deno.test({
     await delay(100);
 
     assertExists(connection);
-    
+
     // Start setUsername in background
     const setUsernamePromise = connection!.setUsername("testuser");
-    
+
     // Wait for awaitUsername to be resolved
     await delay(50);
-    
+
     // Simulate server rejecting the username with a string error
     const usernameData = await connection!.awaitUsername;
     usernameData.resolveUsername.reject("String error message");
-    
+
     // Wait for setUsername to complete
     await setUsernamePromise;
-    
+
     // Should receive 430 error
     const response = await readResponse(conn);
     assertStringIncludes(response, "430");
@@ -1456,14 +1460,14 @@ Deno.test({
     await delay(100);
 
     assertExists(connection);
-    
+
     // Create a letter with null writer explicitly
     // deno-lint-ignore no-explicit-any
     const letterWithNoWriter = { message: "Test", writer: null } as any;
-    
+
     // This should hit the else branch in reply that logs error
     await connection!.reply(200, letterWithNoWriter);
-    
+
     // The message won't be sent to conn, but no exception should occur
 
     conn.close();
@@ -1484,46 +1488,46 @@ Deno.test({
   async fn() {
     const port = getTestPort();
     const { cert, key, rootCA } = await loadTestCerts();
-    
+
     const addr: ListenOptions = {
       hostname: TEST_HOST,
       port: port,
       cert: cert,
       key: key,
     };
-    
+
     const serverOptions: FTPServerOptions = {
       debug: false,
       pasvUrl: TEST_HOST,
       pasvMin: 10000,
       pasvMax: 10100,
     };
-    
+
     const server = new Server(addr, serverOptions);
-    
+
     // Server should be in secure mode
     assertEquals(server.secure, true);
-    
+
     // Start accepting connections
     const serverPromise = (async () => {
       for await (const _connection of server) {
         break;
       }
     })();
-    
+
     await delay(100);
-    
+
     // Connect with TLS using root CA for self-signed cert
     const conn = await Deno.connectTls({
       hostname: TEST_HOST,
       port: port,
       caCerts: [rootCA],
     });
-    
+
     // Read welcome message
     const response = await readResponse(conn);
     assertStringIncludes(response, "220");
-    
+
     conn.close();
     server.close();
     await serverPromise;
@@ -1538,25 +1542,25 @@ Deno.test({
   async fn() {
     const port = getTestPort();
     const { cert, key } = await loadTestCerts();
-    
+
     const addr: ListenOptions = {
       hostname: TEST_HOST,
       port: port,
       cert: cert,
       key: key,
     };
-    
+
     const serverOptions: FTPServerOptions = {
       debug: true, // Enable debug to see warning
       pasvUrl: TEST_HOST,
       pasvMin: 10000,
       pasvMax: 10100,
     };
-    
+
     // Just creating the server with TLS should work and log warning
     const server = new Server(addr, serverOptions);
     assertEquals(server.secure, true);
-    
+
     // No need to accept connections, just close
     server.close();
   },
@@ -1573,12 +1577,12 @@ Deno.test({
   async fn() {
     const port = getTestPort();
     const webhookPort = getTestPort();
-    
+
     // Create a simple HTTP server to receive webhook
     const webhookServer = Deno.listen({ port: webhookPort });
     let webhookReceived = false;
     let webhookBody = "";
-    
+
     const webhookPromise = (async () => {
       const conn = await webhookServer.accept();
       const buffer = new Uint8Array(4096);
@@ -1597,7 +1601,7 @@ Deno.test({
       await conn.write(new TextEncoder().encode(response));
       conn.close();
     })();
-    
+
     const serverOptions: FTPServerOptions = {
       debug: false,
       pasvUrl: TEST_HOST,
@@ -1605,20 +1609,20 @@ Deno.test({
       pasvMax: 10100,
       webhook: `http://${TEST_HOST}:${webhookPort}/webhook`,
     };
-    
+
     const server = createTestServer(port, serverOptions);
-    
+
     await delay(50);
-    
+
     // Call webhookError with an Error
     await server.webhookError(new Error("Test error message"));
-    
+
     // Wait for webhook to be received
     await webhookPromise;
-    
+
     assertEquals(webhookReceived, true);
     assertStringIncludes(webhookBody, "Test error message");
-    
+
     server.close();
     webhookServer.close();
   },
@@ -1631,11 +1635,11 @@ Deno.test({
   async fn() {
     const port = getTestPort();
     const webhookPort = getTestPort();
-    
+
     // Create a simple HTTP server to receive webhook
     const webhookServer = Deno.listen({ port: webhookPort });
     let webhookBody = "";
-    
+
     const webhookPromise = (async () => {
       const conn = await webhookServer.accept();
       const buffer = new Uint8Array(4096);
@@ -1651,7 +1655,7 @@ Deno.test({
       await conn.write(new TextEncoder().encode(response));
       conn.close();
     })();
-    
+
     const serverOptions: FTPServerOptions = {
       debug: false,
       pasvUrl: TEST_HOST,
@@ -1659,19 +1663,19 @@ Deno.test({
       pasvMax: 10100,
       webhook: `http://${TEST_HOST}:${webhookPort}/webhook`,
     };
-    
+
     const server = createTestServer(port, serverOptions);
-    
+
     await delay(50);
-    
+
     // Call webhookError with a string
     // deno-lint-ignore no-explicit-any
     await (server as any).webhookError("String error");
-    
+
     await webhookPromise;
-    
+
     assertStringIncludes(webhookBody, "String error");
-    
+
     server.close();
     webhookServer.close();
   },
@@ -1683,7 +1687,7 @@ Deno.test({
   name: "Server - webhookError skipped when no webhook configured",
   async fn() {
     const port = getTestPort();
-    
+
     // No webhook configured
     const serverOptions: FTPServerOptions = {
       debug: false,
@@ -1692,12 +1696,12 @@ Deno.test({
       pasvMax: 10100,
       // No webhook
     };
-    
+
     const server = createTestServer(port, serverOptions);
-    
+
     // webhookError should just return without doing anything
     await server.webhookError(new Error("Test"));
-    
+
     // No exception = success
     server.close();
   },
@@ -1709,7 +1713,7 @@ Deno.test({
   name: "Server - webhookError handles fetch errors gracefully",
   async fn() {
     const port = getTestPort();
-    
+
     // Point to non-existent server
     const serverOptions: FTPServerOptions = {
       debug: false,
@@ -1718,12 +1722,12 @@ Deno.test({
       pasvMax: 10100,
       webhook: `http://${TEST_HOST}:59999/nonexistent`,
     };
-    
+
     const server = createTestServer(port, serverOptions);
-    
+
     // webhookError should handle fetch failure gracefully
     await server.webhookError(new Error("Test error"));
-    
+
     // No exception = success (error is logged but not thrown)
     server.close();
   },

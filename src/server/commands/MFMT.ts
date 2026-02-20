@@ -30,7 +30,7 @@ export default class Mfmt {
       // Parse: first 14 chars are timestamp, rest is path
       const args = this.data.args;
       const timestampMatch = args.match(/^(\d{14})\s+(.+)$/);
-      
+
       if (!timestampMatch) {
         return await this.conn.reply(501, "Syntax error: MFMT YYYYMMDDHHmmss <path>");
       }
@@ -52,7 +52,7 @@ export default class Mfmt {
       }
 
       const fs = this.conn.fs;
-      
+
       // Check file exists
       try {
         await fs.get(path);

@@ -3,15 +3,15 @@
  */
 import { assertEquals, assertStringIncludes } from "@std/assert";
 import { findCommand } from "../../src/server/commands/_REGISTRY.ts";
-import { createMockConnection, createCommandData, type MockFileSystem } from "./_mock_helpers.ts";
+import { createCommandData, createMockConnection, type MockFileSystem } from "./_mock_helpers.ts";
 
 Deno.test("MLST handler - returns 550 without filesystem", async () => {
   const MlstCmd = findCommand("MLST")!;
   const { conn, replies } = createMockConnection({ fs: null });
-  
+
   const cmd = new MlstCmd(conn, createCommandData("MLST", "file.txt"));
   await cmd.handler();
-  
+
   assertEquals(replies.length, 1);
   assertEquals(replies[0].code, 550);
 });
@@ -32,10 +32,10 @@ Deno.test("MLST handler - returns 502 when fs.get not supported", async () => {
     list: () => Promise.resolve([]),
   };
   const { conn, replies } = createMockConnection({ fs: mockFs });
-  
+
   const cmd = new MlstCmd(conn, createCommandData("MLST", "file.txt"));
   await cmd.handler();
-  
+
   assertEquals(replies.length, 1);
   assertEquals(replies[0].code, 502);
 });
@@ -47,10 +47,10 @@ Deno.test("MLST handler - returns 550 for non-existent file", async () => {
     list: () => Promise.resolve([]),
   };
   const { conn, replies } = createMockConnection({ fs: mockFs });
-  
+
   const cmd = new MlstCmd(conn, createCommandData("MLST", "nonexistent.txt"));
   await cmd.handler();
-  
+
   assertEquals(replies.length, 1);
   assertEquals(replies[0].code, 550);
   assertStringIncludes(String(replies[0].message), "No such file");
@@ -63,11 +63,11 @@ Deno.test("MLST handler - returns file info for current dir", async () => {
     mlsx: () => "type=dir; .",
   };
   const { conn, replies } = createMockConnection({ fs: mockFs });
-  
+
   // MLST with no args uses "." as default
   const cmd = new MlstCmd(conn, createCommandData("MLST", ""));
   await cmd.handler();
-  
+
   assertEquals(replies.length, 1);
   assertEquals(replies[0].code, 250);
 });
@@ -79,10 +79,10 @@ Deno.test("MLST handler - returns file info", async () => {
     mlsx: () => "type=file;size=1234; file.txt",
   };
   const { conn, replies } = createMockConnection({ fs: mockFs });
-  
+
   const cmd = new MlstCmd(conn, createCommandData("MLST", "file.txt"));
   await cmd.handler();
-  
+
   assertEquals(replies.length, 1);
   assertEquals(replies[0].code, 250);
 });

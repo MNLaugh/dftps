@@ -33,7 +33,7 @@ export default class Mlst {
       try {
         const file = await fs.get(path);
         const line = mlsx(file);
-        
+
         // MLST response format (RFC 3659):
         // 250-Listing <path>
         //  <facts> <filename>

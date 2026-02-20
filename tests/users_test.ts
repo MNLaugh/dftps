@@ -354,11 +354,11 @@ Deno.test({
 
     // Update username only
     Users.update(created.id, { username: "newname" });
-    
+
     // Update password only
     const newPass = await hash("newpass");
     Users.update(created.id, { password: newPass });
-    
+
     // Update gid only
     const updated = Users.update(created.id, { gid: 2000 });
 

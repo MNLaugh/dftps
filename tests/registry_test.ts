@@ -2,7 +2,7 @@
  * Tests for command registry functions (parseCommand, findCommand)
  */
 import { assertEquals, assertExists } from "@std/assert";
-import { parseCommand, findCommand, REGISTRY } from "../src/server/commands/_REGISTRY.ts";
+import { findCommand, parseCommand, REGISTRY } from "../src/server/commands/_REGISTRY.ts";
 
 // ============================================
 // parseCommand() tests

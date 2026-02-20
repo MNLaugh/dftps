@@ -3,15 +3,15 @@
  */
 import { assertEquals, assertStringIncludes } from "@std/assert";
 import { findCommand } from "../../src/server/commands/_REGISTRY.ts";
-import { createMockConnection, createCommandData, type MockFileSystem } from "./_mock_helpers.ts";
+import { createCommandData, createMockConnection, type MockFileSystem } from "./_mock_helpers.ts";
 
 Deno.test("MFMT handler - returns 550 without filesystem", async () => {
   const MfmtCmd = findCommand("MFMT")!;
   const { conn, replies } = createMockConnection({ fs: null });
-  
+
   const cmd = new MfmtCmd(conn, createCommandData("MFMT", "20260101120000 file.txt"));
   await cmd.handler();
-  
+
   assertEquals(replies.length, 1);
   assertEquals(replies[0].code, 550);
 });
@@ -31,11 +31,11 @@ Deno.test("MFMT handler - returns 501 with invalid timestamp format", async () =
     utime: () => Promise.resolve(),
   };
   const { conn, replies } = createMockConnection({ fs: mockFs });
-  
+
   // Invalid format - should return 501
   const cmd = new MfmtCmd(conn, createCommandData("MFMT", "invalid file.txt"));
   await cmd.handler();
-  
+
   assertEquals(replies.length, 1);
   assertEquals(replies[0].code, 501);
 });
@@ -47,10 +47,10 @@ Deno.test("MFMT handler - returns 550 for non-existent file", async () => {
     utime: () => Promise.resolve(),
   };
   const { conn, replies } = createMockConnection({ fs: mockFs });
-  
+
   const cmd = new MfmtCmd(conn, createCommandData("MFMT", "20260101120000 nonexistent.txt"));
   await cmd.handler();
-  
+
   assertEquals(replies.length, 1);
   assertEquals(replies[0].code, 550);
   assertStringIncludes(String(replies[0].message), "No such file");
@@ -62,10 +62,10 @@ Deno.test("MFMT handler - returns 501 without args", async () => {
     utime: async () => {},
   };
   const { conn, replies } = createMockConnection({ fs: mockFs });
-  
+
   const cmd = new MfmtCmd(conn, createCommandData("MFMT", ""));
   await cmd.handler();
-  
+
   assertEquals(replies.length, 1);
   assertEquals(replies[0].code, 501);
 });
@@ -82,10 +82,10 @@ Deno.test("MFMT handler - modifies file time", async () => {
     currentDirectory: () => "/",
   };
   const { conn, replies } = createMockConnection({ fs: mockFs });
-  
+
   const cmd = new MfmtCmd(conn, createCommandData("MFMT", "20260217120000 test.txt"));
   await cmd.handler();
-  
+
   assertEquals(replies.length, 1);
   assertEquals(replies[0].code, 213);
   assertEquals(utimeCallPath, "test.txt");

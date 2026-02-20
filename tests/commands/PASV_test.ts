@@ -3,7 +3,7 @@
  */
 import { assertEquals } from "@std/assert";
 import { findCommand } from "../../src/server/commands/_REGISTRY.ts";
-import { createMockConnection, createCommandData } from "./_mock_helpers.ts";
+import { createCommandData, createMockConnection } from "./_mock_helpers.ts";
 
 Deno.test("PASV handler - creates passive connection", () => {
   const PasvCmd = findCommand("PASV")!;
@@ -11,10 +11,10 @@ Deno.test("PASV handler - creates passive connection", () => {
   const mockConn = createMockConnection({
     options: { pasvUrl: "127.0.0.1" },
   });
-  
+
   // Mock the connector creation
   const _cmd = new PasvCmd(mockConn.conn, createCommandData("PASV", ""));
-  
+
   // This will fail because PassiveConnection needs real Connection
   // but we test the static properties are correct
   assertEquals(PasvCmd.directive, "PASV");
@@ -26,9 +26,9 @@ Deno.test("PASV handler - instance has correct properties", () => {
   const { conn } = createMockConnection({
     options: { pasvUrl: "192.168.1.1" },
   });
-  
+
   const cmd = new PasvCmd(conn, createCommandData("PASV", ""));
-  
+
   assertEquals(cmd.directive, "PASV");
   assertEquals(cmd.description, "Initiate passive mode");
   assertEquals(cmd.syntax, "{{cmd}} <mode>");
@@ -40,9 +40,9 @@ Deno.test("PASV handler - handler creates passive connection successfully", asyn
   const { conn, replies } = createMockConnection({
     options: { pasvUrl: "127.0.0.1" },
   });
-  
+
   const cmd = new PasvCmd(conn, createCommandData("PASV", ""));
-  
+
   try {
     await cmd.handler();
     // If it succeeds, verify the reply and clean up
