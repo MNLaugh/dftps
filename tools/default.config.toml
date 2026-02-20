@@ -1,40 +1,33 @@
-#ftp server default config file
+# DFtpS - FTP Server Configuration File
+# https://github.com/MNLaugh/dftps
+
 [addr]
   port = 21
-# hostname = "127.0.0.1"
+  # hostname = "127.0.0.1"
 
 [options]
   # debug = true
-  # Url for passive connection.
+  # URL for passive connection
   pasvUrl = "127.0.0.1"
-  # Minimum port for passive connection.
+  # Minimum port for passive connection
   pasvMin = 1024
-  # Maximum port for passive connection.
+  # Maximum port for passive connection
   pasvMax = 65535
-  # Handle anonymous connexion. true || false
-# anonymous = false
-  # Sets the format to use for file stat queries such as "LIST".
-# fileFormat?: string;
+  # Handle anonymous connection (true | false)
+  # anonymous = false
+  # Sets the format to use for file stat queries such as "LIST"
+  # fileFormat = ""
   # Array of commands that are not allowed
-# blacklist?: string[];
-  # Url of webhook like Discord webhook
-# webhook="webhook-url"
+  # blacklist = ["DELE", "RMD"]
+  # URL of webhook (e.g., Discord webhook)
+  # webhook = "https://discord.com/api/webhooks/..."
+
+# TLS Configuration (optional)
+# [tls]
+#   certFile = "./cert.pem"
+#   keyFile = "./key.pem"
 
 [database]
-  # Select your connector type ("MariaDB" | "MongoDB" | "MySQL" | "PostgreSQL" | "SQLite")
-  #connector = "MariaDB"
-
-  # MariaDB, MySQL, PostgreSQL Example
-  #database = "database-name"
-  #host = "host"
-  #username = "username"
-  #password = "password"
-  #port = port
-
-  # MongoDB Example
-  #"mongodb://127.0.0.1:27017"
-  #uri = "mongodb-url"
-  #database = "database-name"
-
-  # SQLite Example
-  #filepath = "sqlite file path"
+  # SQLite database configuration
+  connector = "SQLite"
+  filepath = "./dftps.db"

@@ -1,0 +1,100 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            artifact: dftps-linux-x64
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            artifact: dftps-macos-x64
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            artifact: dftps-macos-arm64
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            artifact: dftps-windows-x64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: "2.x"
+
+      - name: Cache dependencies
+        run: deno cache deps.ts
+
+      - name: Compile binary
+        run: |
+          deno compile --allow-all --target ${{ matrix.target }} --output ${{ matrix.artifact }} src/cli/mod.ts
+
+      - name: Create archive (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          mkdir -p release
+          cp ${{ matrix.artifact }} release/dftps
+          cp tools/default.config.toml release/dftps.toml
+          cp README.md release/
+          cp LICENSE release/ || echo "No LICENSE file"
+          tar -czvf ${{ matrix.artifact }}.tar.gz -C release .
+
+      - name: Create archive (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path release
+          Copy-Item "${{ matrix.artifact }}.exe" -Destination "release/dftps.exe"
+          Copy-Item "tools/default.config.toml" -Destination "release/dftps.toml"
+          Copy-Item "README.md" -Destination "release/"
+          if (Test-Path "LICENSE") { Copy-Item "LICENSE" -Destination "release/" }
+          Compress-Archive -Path "release/*" -DestinationPath "${{ matrix.artifact }}.zip"
+
+      - name: Upload artifact (Unix)
+        if: runner.os != 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}.tar.gz
+
+      - name: Upload artifact (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            artifacts/**/*.tar.gz
+            artifacts/**/*.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
