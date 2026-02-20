@@ -243,6 +243,11 @@ export default class FileSystem {
     try {
       await Deno.chown(path, _uid || uid, _gid || gid);
     } catch (e) {
+      // chown may fail on some systems (macOS/Windows without root)
+      // This is not critical, so we just ignore the error
+      if (e instanceof Deno.errors.PermissionDenied) {
+        return; // Silently ignore permission denied on chown
+      }
       throw e;
     }
   }
