@@ -61,7 +61,7 @@ const serveCommands = new Command()
       });
       awaitLogin.then(async ({ password, resolvePassword }: LoginResolvable) => {
         if (!user) return resolvePassword.reject("User not found!");
-        if (!await verify(password, user.password)) return resolvePassword.reject("Wrong password!");
+        if (!await verify(user.password, password)) return resolvePassword.reject("Wrong password!");
         const { root, uid, gid } = user;
         resolvePassword.resolve({ root, uid, gid });
       });

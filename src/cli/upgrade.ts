@@ -27,20 +27,57 @@ export const upgradeCommands = new Command()
       if (release.tag_name.replace("v", "") === version) {
         return console.log(colors.bold.magenta("You already have latest release installed."));
       }
-      console.log(`Download latest version of DFtpS (${release.tag_name})`);
+
+      // Detect OS and architecture
+      const os = Deno.build.os;
+      const arch = Deno.build.arch;
+
+      let artifactName = "";
+      let isWindows = false;
+
+      if (os === "linux" && arch === "x86_64") {
+        artifactName = "dftps-linux-x64.tar.gz";
+      } else if (os === "darwin" && arch === "x86_64") {
+        artifactName = "dftps-macos-x64.tar.gz";
+      } else if (os === "darwin" && arch === "aarch64") {
+        artifactName = "dftps-macos-arm64.tar.gz";
+      } else if (os === "windows" && arch === "x86_64") {
+        artifactName = "dftps-windows-x64.zip";
+        isWindows = true;
+      } else {
+        return console.log(colors.bold.red(`Unsupported platform: ${os}/${arch}`));
+      }
+
+      // Find the matching asset
+      const asset = release.assets.find((a: { name: string }) => a.name === artifactName);
+      if (!asset) {
+        return console.log(colors.bold.red(`No release found for ${artifactName}`));
+      }
+
+      console.log(`Download latest version of DFtpS (${release.tag_name}) for ${os}/${arch}`);
+
+      if (isWindows) {
+        console.log(colors.yellow("On Windows, please download manually from:"));
+        console.log(asset.browser_download_url);
+        return;
+      }
+
       await run([
         "curl",
         "--fail",
         "--location",
         "--progress-bar",
         "--output",
-        "dftps.zip",
-        release.assets[0].browser_download_url,
+        "/tmp/dftps.tar.gz",
+        asset.browser_download_url,
       ]);
-      await run(["unzip", "-o", "-j", "dftps.zip", "dftps", "-d", "/usr/bin"]);
-      await run(["sudo", "rm", "dftps.zip"]);
-      await run(["sudo", "chmod", "+x", "/usr/bin/dftps"]);
-      console.log(`DftpS was upgraded successfully\nRun 'dftps --help' to get started`);
+      await run(["tar", "-xzf", "/tmp/dftps.tar.gz", "-C", "/tmp"]);
+      await run(["sudo", "cp", "/tmp/dftps", "/usr/local/bin/dftps"]);
+      await run(["sudo", "chmod", "+x", "/usr/local/bin/dftps"]);
+      await run(["rm", "-rf", "/tmp/dftps.tar.gz", "/tmp/dftps", "/tmp/dftps.toml", "/tmp/README.md", "/tmp/LICENSE"]);
+
+      console.log(`DftpS was upgraded successfully to ${release.tag_name}`);
+      console.log("Run 'dftps --help' to get started");
     } catch (e) {
       throw e;
     }
@@ -48,7 +85,7 @@ export const upgradeCommands = new Command()
 
 export async function latest() {
   try {
-    const uri = "https://api.github.com/repos/devartsite/dftps/releases/latest";
+    const uri = "https://api.github.com/repos/MNLaugh/dftps/releases/latest";
     const response = await fetch(uri);
     return await response.json();
   } catch (e) {

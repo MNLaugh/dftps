@@ -11,18 +11,44 @@ import { latest, upgradeCommands } from "./upgrade.ts";
 
 export const version = "2.0.5";
 const logger = new Logger({ prefix: `[DFtpS] => ` });
-const defaultConfigFile = "./default.config.toml";
 const configFile = "/etc/dftps.toml";
+
+const DEFAULT_CONFIG = `# DFtpS - FTP Server Configuration File
+# https://github.com/MNLaugh/dftps
+
+[addr]
+port = 21
+# hostname = "127.0.0.1"
+
+[options]
+# debug = true
+pasvUrl = "127.0.0.1"
+pasvMin = 1024
+pasvMax = 65535
+# anonymous = false
+# blacklist = ["DELE", "RMD"]
+# webhook = "https://discord.com/api/webhooks/..."
+
+# TLS Configuration (optional)
+# [tls]
+#   certFile = "./cert.pem"
+#   keyFile = "./key.pem"
+
+[database]
+connector = "SQLite"
+filepath = "./dftps.db"
+`;
+
 async function ConfigFileChecker(): Promise<void> {
   try {
     await Deno.stat(configFile);
   } catch (_) {
     try {
-      await Deno.copyFile(defaultConfigFile, configFile);
-      logger.warn(`Your configuration file as been created in "${configFile}", You now need to edit it!`);
+      await Deno.writeTextFile(configFile, DEFAULT_CONFIG);
+      logger.warn(`Your configuration file has been created in "${configFile}", You now need to edit it!`);
       Deno.exit(0);
     } catch (e) {
-      logger.error("Error on creating config file", e, "You have to probably run me with sudo!");
+      logger.error("Error on creating config file", e, "You probably need to run with sudo!");
       Deno.exit(0);
     }
   }
