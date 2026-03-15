@@ -10,7 +10,7 @@
 import { DPath, exists, format, v4 } from "../../deps.ts";
 import { SEPARATOR as SEP } from "@std/path";
 import { padStart } from "../_utils/lodash.ts";
-import Connection from "./connection.ts";
+import { Connection } from "./connection.ts";
 
 /** Options for initializing a FileSystem instance */
 export type FileSystemOptions = {
@@ -49,7 +49,7 @@ type ResolvedPath = {
  * Handles all file operations for an FTP connection including
  * directory navigation, file reads/writes, and permissions.
  */
-export default class FileSystem {
+export class FileSystem {
   connection: Connection;
   cwd: string;
   private _root: string;
@@ -66,7 +66,7 @@ export default class FileSystem {
     this.gid = gid;
   }
 
-  get root() {
+  get root(): string {
     return this._root;
   }
 
@@ -97,7 +97,7 @@ export default class FileSystem {
     return { clientPath, fsPath };
   }
 
-  currentDirectory() {
+  currentDirectory(): string {
     return this.cwd;
   }
 
@@ -115,7 +115,7 @@ export default class FileSystem {
   }
 
   private FORMATS: Record<string, statFunction> = { ls, ep, mlsx };
-  stat(fileStat: FileInfo, format: string | statFunction = "ls") {
+  stat(fileStat: FileInfo, format: string | statFunction = "ls"): string {
     if (typeof format === "function") {
       try {
         const result = format(fileStat);
@@ -126,10 +126,11 @@ export default class FileSystem {
     } else if (typeof format === "string") {
       if (typeof this.FORMATS[format] === "undefined") throw new Error("Bad file stat formatter");
       return this.FORMATS[format](fileStat);
-    } else return "";
+    }
+    return "";
   }
 
-  async list(path = ".") {
+  async list(path = "."): Promise<FileInfo[]> {
     const { fsPath } = this._resolvePath(path);
     const files = [];
     try {
@@ -213,7 +214,7 @@ export default class FileSystem {
     }
   }
 
-  async rename(from: string, to: string) {
+  async rename(from: string, to: string): Promise<void> {
     const { fsPath: fromPath } = this._resolvePath(from);
     const { fsPath: toPath } = this._resolvePath(to);
     const access = this.access(fromPath);
@@ -225,7 +226,7 @@ export default class FileSystem {
     }
   }
 
-  async chmod(path: string, mode: number) {
+  async chmod(path: string, mode: number): Promise<void> {
     const { fsPath } = this._resolvePath(path);
     const access = this.access(fsPath);
     if (!access) throw new Error("You don't have permissions!");
@@ -270,6 +271,9 @@ export default class FileSystem {
     return v4.generate().replace(/\W/g, "");
   }
 }
+
+// Default export for backwards compatibility
+export default FileSystem;
 
 export function ls(fileStat: FileInfo): string {
   const now = new Date();

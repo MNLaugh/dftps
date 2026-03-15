@@ -1,6 +1,6 @@
 import { Command, verify } from "../../deps.ts";
 
-import Server from "../server/mod.ts";
+import { Server } from "../server/mod.ts";
 import type { ListenOptions } from "../server/mod.ts";
 import type { LoginResolvable, UsernameResolvable } from "../server/connection.ts";
 import { type User, Users } from "../db/Users.ts";

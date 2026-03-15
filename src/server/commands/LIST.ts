@@ -1,4 +1,4 @@
-import Connection from "../connection.ts";
+import { Connection } from "../connection.ts";
 import type { CommandData } from "./_REGISTRY.ts";
 import { encode } from "../../../deps.ts";
 // FileInfo type used implicitly via FileSystem

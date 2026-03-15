@@ -1,4 +1,4 @@
-import Connection from "../connection.ts";
+import { Connection } from "../connection.ts";
 
 export default class ActiveConnector {
   hostname?: string;
@@ -41,7 +41,7 @@ export default class ActiveConnector {
     }
   }
 
-  async accept() {
+  async accept(): Promise<this> {
     try {
       if (!this.conn && this.hostname && this.port) {
         this.conn = await this.connect({ hostname: this.hostname, port: this.port });

@@ -1,5 +1,5 @@
 import { deferred, encode } from "../../deps.ts";
-import Server from "./mod.ts";
+import { Server } from "./mod.ts";
 import IterableReader from "../_utils/iterableReader.ts";
 import Logger, { Colors } from "../_utils/logger.ts";
 import { STATUS_TEXT } from "./ftp_status.ts";
@@ -7,7 +7,7 @@ import { compact } from "../_utils/lodash.ts";
 
 import { findCommand, parseCommand } from "./commands/_REGISTRY.ts";
 
-import FileSystem from "./filesystem.ts";
+import { FileSystem } from "./filesystem.ts";
 
 import PassiveConnection from "./connectors/passive.ts";
 import ActiveConnection from "./connectors/active.ts";
@@ -104,7 +104,7 @@ let connectionIdCounter = 0;
  * }
  * ```
  */
-export default class Connection {
+export class Connection {
   #closed = false;
   #writer: WritableStreamDefaultWriter<Uint8Array>;
 
@@ -153,7 +153,7 @@ export default class Connection {
     this.logger.debug("Debug: ", ...args);
   }
 
-  get closed() {
+  get closed(): boolean {
     return this.#closed;
   }
 
@@ -351,3 +351,6 @@ export default class Connection {
     } catch (_) { /** It's closed */ }
   }
 }
+
+// Default export for backwards compatibility
+export default Connection;

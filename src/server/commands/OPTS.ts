@@ -1,4 +1,4 @@
-import Connection from "../connection.ts";
+import { Connection } from "../connection.ts";
 import type { CommandData } from "./_REGISTRY.ts";
 
 const OPTIONS: Record<string, (settings: string[]) => string | null> = {

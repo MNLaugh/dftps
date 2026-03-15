@@ -1,4 +1,4 @@
-import Connection from "../connection.ts";
+import { Connection } from "../connection.ts";
 import User from "./USER.ts";
 import Pass from "./PASS.ts";
 import Syst from "./SYST.ts";

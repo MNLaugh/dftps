@@ -1,4 +1,4 @@
-import Connection from "../connection.ts";
+import { Connection } from "../connection.ts";
 import type { CommandConstructor, CommandData } from "./_REGISTRY.ts";
 import { findCommand, REGISTRY } from "./_REGISTRY.ts";
 import { chunk } from "../../_utils/lodash.ts";

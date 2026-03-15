@@ -1,6 +1,6 @@
 import { MuxAsyncIterator } from "../../deps.ts";
 import Logger from "../_utils/logger.ts";
-import Connection from "./connection.ts";
+import { Connection } from "./connection.ts";
 import type { Database } from "@db/sqlite";
 import { UserRepository } from "../db/UserRepository.ts";
 

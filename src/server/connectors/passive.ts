@@ -1,5 +1,5 @@
 import { makeRange, randomPort } from "../../../deps.ts";
-import Connection from "../connection.ts";
+import { Connection } from "../connection.ts";
 
 interface PasvServerData {
   hostname: string;
