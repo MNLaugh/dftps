@@ -1,6 +1,8 @@
 import { MuxAsyncIterator } from "../../deps.ts";
 import Logger from "../_utils/logger.ts";
 import Connection from "./connection.ts";
+import type { Database } from "@db/sqlite";
+import { UserRepository } from "../db/UserRepository.ts";
 
 /** Options for creating an FTP listener server. */
 export type ListenOptions = Omit<Deno.ListenOptions | Deno.ListenTlsOptions, "transport"> & {
@@ -28,6 +30,18 @@ export type FTPServerOptions = {
   blacklist?: string[];
   /** Url of webhook like Discord webhook */
   webhook?: string;
+  /**
+   * SQLite database instance for user management.
+   * When provided, enables `server.users` for user operations.
+   *
+   * @example
+   * ```ts
+   * const db = createDb({ connector: "SQLite", filepath: "./users.db" });
+   * const server = new Server({ port: 21 }, { database: db });
+   * const user = server.users?.findByUsername("admin");
+   * ```
+   */
+  database?: Database;
 };
 
 /** Options for webhook notifications */
@@ -47,9 +61,10 @@ export type webookOptions = string | number | Error;
  * }
  * ```
  */
-class Server implements AsyncIterable<Connection> {
+export class Server implements AsyncIterable<Connection> {
   #closed = false;
   #connections: Connection[] = [];
+  #users?: UserRepository;
 
   /** TCP listener options */
   addr: ListenOptions;
@@ -58,8 +73,27 @@ class Server implements AsyncIterable<Connection> {
   listener: Deno.Listener;
   /** Whether the server uses TLS */
   secure = false;
+  /**
+   * Database instance passed to the server (if any)
+   * Use this to access the raw database for custom queries.
+   */
+  database?: Database;
 
   logger: Logger;
+
+  /**
+   * User repository for CRUD operations on users.
+   * Only available if a database was provided in the server options.
+   *
+   * @example
+   * ```ts
+   * const user = server.users?.findByUsername("admin");
+   * server.users?.create({ username: "new", password: hash, root: "/", uid: 1000, gid: 1000 });
+   * ```
+   */
+  get users(): UserRepository | undefined {
+    return this.#users;
+  }
   constructor(addr: ListenOptions, _options?: FTPServerOptions) {
     this.logger = Logger.create({ prefix: "[Server] =>" });
 
@@ -96,6 +130,13 @@ class Server implements AsyncIterable<Connection> {
 
     /** Info of listener */
     this.logger.info(`Listen on ${this.addr.hostname}:${this.addr.port} ${(this.secure) ? "with" : "without"} TLS`);
+
+    // Initialize database and user repository if provided
+    if (_options?.database) {
+      this.database = _options.database;
+      this.#users = new UserRepository(_options.database);
+      this.debug("Database initialized with UserRepository");
+    }
   }
 
   // deno-lint-ignore no-explicit-any
@@ -240,4 +281,5 @@ class Server implements AsyncIterable<Connection> {
   }
 }
 
+// Default export for backwards compatibility
 export default Server;

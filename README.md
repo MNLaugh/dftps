@@ -78,11 +78,11 @@ for await (const connection of serve) {
 
 ### With database
 
-- Import the database utilities and the Users repository:
+- Import the database utilities:
 
   ```ts
-  import { Server, verify } from "jsr:@dftps/server";
-  import { createDb, type User, Users } from "jsr:@dftps/server/db";
+  import { Server, createDb } from "jsr:@dftps/server";
+  import { verify } from "@node-rs/argon2";
   ```
 
 - Database configuration (SQLite):
@@ -90,10 +90,13 @@ for await (const connection of serve) {
     - filepath [string] (Required) - Path to the SQLite database file
 
 ```ts
-/** Initialize SQLite database */
+/** Initialize SQLite database and pass it to the server */
 const db = createDb({ connector: "SQLite", filepath: "./data/dftps.db" });
 
-const serve = new Server(ListenOptions, FTPServerOptions);
+const serve = new Server(
+  { port: 21, hostname: "127.0.0.1" },
+  { database: db }  // Inject database into server
+);
 
 for await (const connection of serve) {
   const { awaitUsername, awaitLogin } = connection;
@@ -101,8 +104,8 @@ for await (const connection of serve) {
 
   /** Waiting to receiving username from connection */
   awaitUsername.then(async ({ username, resolveUsername }: UsernameResolvable) => {
-    /** Find user in database */
-    user = await Users.findByUsername(username);
+    /** Find user via server.users */
+    user = serve.users?.findByUsername(username);
     if (!user) return resolveUsername.reject("Incorrect username!");
     resolveUsername.resolve();
   });
@@ -115,6 +118,9 @@ for await (const connection of serve) {
     resolvePassword.resolve({ root, uid, gid });
   });
 }
+```
+
+> **Note:** You can also use the static `Users` class directly (legacy approach), but injecting the database via `{ database: db }` is recommended for multi-instance scenarios.
 ```
 
 ## Log example

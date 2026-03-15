@@ -66,6 +66,37 @@
  *   });
  * }
  * ```
+ *
+ * @example With database injection (recommended for multi-instance scenarios)
+ * ```ts
+ * import { Server, createDb } from "@dftp/server";
+ * import { hash, verify } from "@node-rs/argon2";
+ *
+ * // Create database and pass it to the server
+ * const db = createDb({ connector: "SQLite", filepath: "./users.db" });
+ * const server = new Server({ port: 21 }, { database: db });
+ *
+ * // Access users via server.users
+ * const hashedPassword = await hash("secret");
+ * server.users?.create({
+ *   username: "admin",
+ *   password: hashedPassword,
+ *   root: "/srv/ftp",
+ *   uid: 1000,
+ *   gid: 1000,
+ * });
+ *
+ * for await (const connection of server) {
+ *   connection.on("login", async ({ username, password }, resolve, reject) => {
+ *     const user = server.users?.findByUsername(username);
+ *     if (user && await verify(user.password, password)) {
+ *       resolve({ root: user.root, uid: user.uid, gid: user.gid });
+ *     } else {
+ *       reject();
+ *     }
+ *   });
+ * }
+ * ```
  */
 
 /**
@@ -103,8 +134,10 @@ export { createDb, type DatabaseConfig } from "./src/db/mod.ts";
 
 /**
  * User management
- * @see {@link Users} - User repository for CRUD operations
+ * @see {@link Users} - Static user repository (legacy, uses global DB)
+ * @see {@link UserRepository} - Instanciable user repository (recommended)
  * @see {@link User} - User entity type
  * @see {@link NewUser} - Type for creating new users
  */
 export { type NewUser, type User, Users } from "./src/db/Users.ts";
+export { UserRepository } from "./src/db/UserRepository.ts";

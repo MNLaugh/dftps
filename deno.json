@@ -1,14 +1,14 @@
 {
   "name": "@dftp/server",
-  "version": "2.0.8",
+  "version": "2.1.0",
   "license": "MIT",
   "exports": "./mod.ts",
   "nodeModulesDir": "auto",
   "tasks": {
     "check": "deno check mod.ts",
-    "test": "deno test --allow-all",
-    "coverage": "deno test --allow-all --coverage=coverage/ && deno coverage coverage/",
-    "coverage:html": "deno test --allow-all --coverage=coverage/ && deno coverage coverage/ --html",
+    "test": "deno test --allow-all tests/",
+    "coverage": "deno test --allow-all --coverage=coverage/ tests/ && deno coverage coverage/",
+    "coverage:html": "deno test --allow-all --coverage=coverage/ tests/ && deno coverage coverage/ --html",
     "dev": "deno run --allow-all src/cli/mod.ts serve",
     "lint": "deno lint",
     "fmt": "deno fmt"
@@ -43,11 +43,13 @@
     "singleQuote": false
   },
   "exclude": [
-    "tests/",
     "tools/",
     "assets/",
     "coverage/",
     ".github/"
   ],
+  "test": {
+    "include": ["tests/"]
+  },
   "allowScripts": ["npm:better-sqlite3@11.10.0"]
 }

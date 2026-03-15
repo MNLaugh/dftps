@@ -5,6 +5,7 @@
 export { createDb, type Database, type DatabaseConfig, getDb } from "./database.ts";
 export { type NewUser, type User } from "./schema.ts";
 export * as schema from "./schema.ts";
+export { UserRepository } from "./UserRepository.ts";
 
 // Re-export createDb as default for backwards compatibility
 export { createDb as default } from "./database.ts";
