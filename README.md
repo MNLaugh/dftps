@@ -81,7 +81,7 @@ for await (const connection of serve) {
 - Import the database utilities:
 
   ```ts
-  import { Server, createDb } from "jsr:@dftps/server";
+  import { createDb, Server } from "jsr:@dftps/server";
   import { verify } from "@node-rs/argon2";
   ```
 
@@ -95,7 +95,7 @@ const db = createDb({ connector: "SQLite", filepath: "./data/dftps.db" });
 
 const serve = new Server(
   { port: 21, hostname: "127.0.0.1" },
-  { database: db }  // Inject database into server
+  { database: db }, // Inject database into server
 );
 
 for await (const connection of serve) {
@@ -120,9 +120,10 @@ for await (const connection of serve) {
 }
 ```
 
-> **Note:** You can also use the static `Users` class directly (legacy approach), but injecting the database via `{ database: db }` is recommended for multi-instance scenarios.
-```
+> **Note:** You can also use the static `Users` class directly (legacy approach), but injecting the database via
+> `{ database: db }` is recommended for multi-instance scenarios.
 
+```
 ## Log example
 
 ![output_example](./assets/example_log.gif)
@@ -168,3 +169,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 - [Ftp](https://cr.yp.to/ftp.html)
 - [Ftp commands](https://en.wikipedia.org/wiki/List_of_FTP_commands)
 - [Ftp reply codes](https://en.wikipedia.org/wiki/List_of_FTP_server_return_codes)
+```

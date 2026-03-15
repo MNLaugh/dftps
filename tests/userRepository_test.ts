@@ -255,10 +255,18 @@ Deno.test({
     assertEquals(notInRepo2, undefined);
 
     // Cleanup
-    try { db1.close(); } catch { /* ignore */ }
-    try { db2.close(); } catch { /* ignore */ }
-    try { await Deno.remove(path1); } catch { /* ignore */ }
-    try { await Deno.remove(path2); } catch { /* ignore */ }
+    try {
+      db1.close();
+    } catch { /* ignore */ }
+    try {
+      db2.close();
+    } catch { /* ignore */ }
+    try {
+      await Deno.remove(path1);
+    } catch { /* ignore */ }
+    try {
+      await Deno.remove(path2);
+    } catch { /* ignore */ }
   },
   sanitizeResources: false,
   sanitizeOps: false,
