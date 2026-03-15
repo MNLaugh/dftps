@@ -4,7 +4,6 @@
  * Tests for server.users and database injection functionality
  */
 import { assertEquals, assertExists } from "@std/assert";
-import { delay } from "@std/async";
 import Server from "../src/server/mod.ts";
 import type { FTPServerOptions, ListenOptions } from "../src/server/mod.ts";
 import { createDb } from "../src/db/database.ts";
