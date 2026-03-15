@@ -775,8 +775,8 @@ Deno.test("FileSystem - stat with custom function that returns empty", () => {
   const emptyFormatter = () => "";
   const result = fs.stat(file, emptyFormatter);
 
-  // If formatter returns falsy, stat returns undefined
-  assertEquals(result, undefined);
+  // If formatter returns empty string, stat returns empty string
+  assertEquals(result, "");
 
   Deno.removeSync(tempDir, { recursive: true });
 });
@@ -1168,9 +1168,9 @@ Deno.test("FileSystem - stat with function returning empty triggers fallback", a
   await Deno.writeTextFile(`${tempDir}/test.txt`, "content");
   const fileInfo = await fs.get("test.txt");
 
-  // Function returning empty string - should return undefined/falsy
+  // Function returning empty string - returns empty string (fallback)
   const result = fs.stat(fileInfo, () => "");
-  assertEquals(result, undefined);
+  assertEquals(result, "");
 
   await Deno.remove(tempDir, { recursive: true });
 });
